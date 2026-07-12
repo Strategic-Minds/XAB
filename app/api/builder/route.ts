@@ -25,6 +25,7 @@ TAILWIND TIPS:
 - Responsive: use sm:, md:, lg: prefixes freely.`;
 
 const openai = createOpenAI({
+  defaultObjectGenerationMode: "json",
   baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
     ? 'https://ai-gateway.vercel.sh/v1'
     : undefined,
