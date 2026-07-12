@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import { Send, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,13 +13,9 @@ export function AppChatPanel() {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-  const chatOptions = React.useMemo(() => ({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",  // Use the existing /api/chat endpoint
-    }),
-  }), []);
-
-  const { messages, sendMessage, status } = useChat(chatOptions);
+  const { messages, sendMessage, status } = useChat({
+    api: "/api/chat",
+  });
 
   const isStreaming = status === "streaming" || status === "submitted";
 
