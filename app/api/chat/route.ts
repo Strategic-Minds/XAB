@@ -1,4 +1,5 @@
-import { streamText, gateway, convertToModelMessages } from "ai";
+import { streamText } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest } from "next/server";
 import { tools } from "@/lib/ai-tools";
@@ -6,6 +7,13 @@ import { executeTool } from "@/lib/tool-executor";
 import { generateSystemPrompt, ADVANCED } from "@/lib/ai-config";
 
 export const maxDuration = 60;
+
+const openai = createOpenAI({
+  baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
+    ? 'https://ai-gateway.vercel.sh/v1'
+    : undefined,
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 const MODEL_MAP: Record<string, string> = {
   // OpenAI
@@ -77,10 +85,10 @@ export async function POST(req: NextRequest) {
     }
 
     const result = streamText({
-      model: gateway(modelId),
+      model: openai(modelId),
       system,
       tools,
-      messages: await convertToModelMessages(messages),
+      messages,
       onFinish: async ({ text, toolCalls }) => {
         // Persist assistant reply
         if (user && activeConversationId) {
@@ -132,7 +140,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return result.toUIMessageStreamResponse();
+    return result.toDataStreamResponse();
   } catch (err) {
     console.error("[XAB] /api/chat error:", err);
     return new Response(JSON.stringify({ error: "Chat failed" }), { status: 500 });
