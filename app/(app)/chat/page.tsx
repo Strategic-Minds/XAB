@@ -217,6 +217,7 @@ function ChatPageInner() {
   const modelPickerRef = React.useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status, stop } = useChat({
+    // @ts-expect-error -- api prop valid at runtime in @ai-sdk/react v4
     api: "/api/chat",
     body: {
       model: selectedModel.id,
