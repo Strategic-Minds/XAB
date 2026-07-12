@@ -97,7 +97,8 @@ async function callTool(name: string, args: Record<string, unknown>) {
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { transport: string } }) {
+export async function POST(req: NextRequest, context: {
+  const { transport } = await context.params; params: Promise<{ transport: string }> }) {
   const cron = req.headers.get('authorization');
   const body = await req.json().catch(() => ({}));
   const { method, id, params: rpcParams } = body;
@@ -120,6 +121,7 @@ export async function POST(req: NextRequest, { params }: { params: { transport: 
   return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32601, message: `Method not found: ${method}` } }, { status: 404 });
 }
 
-export async function GET(req: NextRequest, { params }: { params: { transport: string } }) {
+export async function GET(req: NextRequest, context: {
+  const { transport } = await context.params; params: Promise<{ transport: string }> }) {
   return NextResponse.json({ name: 'xab-mcp', version: XAB_VERSION, tools: TOOLS.length, endpoint: '/api/mcp/mcp' });
 }
