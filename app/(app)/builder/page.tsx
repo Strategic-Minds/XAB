@@ -257,6 +257,7 @@ function BuilderInner() {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const { messages, sendMessage, status, stop } = useChat({
+    // @ts-expect-error -- api prop valid at runtime in @ai-sdk/react v4
     api: "/api/builder",
     body: { model, templateId: activeTemplate?.id },
   });
