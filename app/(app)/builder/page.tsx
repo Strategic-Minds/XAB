@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import {
   Send, Sparkles, Code2, Eye, Copy, Check,
   Monitor, Smartphone, Tablet, ChevronDown,
@@ -258,12 +257,8 @@ function BuilderInner() {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const { messages, sendMessage, status, stop } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/builder",
-      prepareSendMessagesRequest: ({ messages, body }) => ({
-        body: { ...body, messages, model, templateId: activeTemplate?.id },
-      }),
-    }),
+    api: "/api/builder",
+    body: { model, templateId: activeTemplate?.id },
   });
 
   const isStreaming = status === "streaming" || status === "submitted";
