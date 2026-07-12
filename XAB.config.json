@@ -1,0 +1,40 @@
+{
+  "system": "XAB",
+  "version": "1.0.0",
+  "company": "Strategic Minds AI LLC",
+  "dba": "Strategic Minds AI",
+  "verticals": ["AI Consulting", "AI Systems Builder", "SMB Automation"],
+  "domains": {
+    "primary": "xps-intelligence.com",
+    "secondary": ["strategicmindsai.com", "autobuilderos.com"]
+  },
+  "infrastructure": {
+    "supabase": "azajysheebfhyzoyplpf.supabase.co",
+    "vercel": "xab-system",
+    "ai_gateway": "https://ai-gateway.vercel.sh/v1",
+    "region": "us-east-1"
+  },
+  "llm": {
+    "fast": "openai/gpt-4o-mini",
+    "smart": "openai/gpt-4o",
+    "reason": "openai/o4-mini",
+    "embed": "openai/text-embedding-3-small"
+  },
+  "overnight": {
+    "enabled": true,
+    "budget_usd_per_night": 50,
+    "cadence_hours": 3
+  },
+  "activation": {
+    "target": 100,
+    "governance": "Level 5"
+  },
+  "governance": {
+    "protected_actions": [
+      "APPROVE MERGE TO MAIN",
+      "APPROVE PRODUCTION DEPLOY",
+      "APPROVE SUPABASE MIGRATION"
+    ],
+    "kill_switches": ["KS-001","KS-002","KS-003","KS-004"]
+  }
+}
