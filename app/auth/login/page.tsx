@@ -81,7 +81,7 @@ export default function LoginPage() {
                 <label className="text-[12px] font-medium text-white" htmlFor="password">
                   Password
                 </label>
-                <Link href="/auth/forgot" className="text-[11px] text-indigo-400 hover:text-indigo-300 transition-colors">
+                <Link href={"/auth/forgot" as any} className="text-[11px] text-indigo-400 hover:text-indigo-300 transition-colors">
                   Forgot password?
                 </Link>
               </div>
