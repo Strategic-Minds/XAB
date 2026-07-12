@@ -57,7 +57,7 @@ When building components or pages for this template:
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const messages: UIMessage[] = body.messages ?? [];
+  const messages: {role: string; content: string; id?: string}[] = body.messages ?? [];
   const model: string = body.model ?? "openai/gpt-4.1";
   const templateId: string | undefined = body.templateId;
 
