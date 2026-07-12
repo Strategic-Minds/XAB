@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   const runId = `HEAL-${Date.now()}`;
-  const supabase = createClient();
+  const supabase = await createClient();
   const results: Record<string, unknown> = {};
 
   // 1. Clean stale workflow leases
