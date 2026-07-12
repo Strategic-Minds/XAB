@@ -1,0 +1,22 @@
+name: XAB Presentation Rescue
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [rescue/xab-presentation-working-v1]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xab-presentation-rescue-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
