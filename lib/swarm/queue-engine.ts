@@ -39,7 +39,7 @@ export async function enqueue(
   payload: Record<string, unknown>,
   options: QueueOptions = {}
 ): Promise<string> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const job_id = `JOB-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 
   const { error } = await supabase.from('job_queue').insert({
@@ -66,7 +66,7 @@ export async function claim(
   agent_id: string,
   job_types?: string[]
 ): Promise<Job | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   let query = supabase
     .from('job_queue')
@@ -102,7 +102,7 @@ export async function claim(
 }
 
 export async function complete(job_id: string, result: Record<string, unknown>): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.from('job_queue').update({
     status: 'COMPLETED',
     completed_at: new Date().toISOString(),
@@ -115,7 +115,7 @@ export async function fail(
   error: string,
   shouldRetry = true
 ): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: job } = await supabase.from('job_queue').select('attempt_count, max_attempts, retry_backoff_seconds').eq('job_id', job_id).single();
 
   if (!job) return;
@@ -152,7 +152,7 @@ export async function fail(
 }
 
 export async function quarantine(job_id: string, reason: string, severity = 'S3_HIGH'): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: job } = await supabase.from('job_queue').select('*').eq('job_id', job_id).single();
   if (!job) return;
 
