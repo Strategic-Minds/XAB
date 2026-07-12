@@ -1,5 +1,5 @@
 {
-  "name": "reality-os-xab",
+  "name": "xab",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -80,5 +80,6 @@
     "tailwindcss": "latest",
     "typescript": "^5.8.3",
     "vitest": "^1.6.0"
-  }
+  },
+  "description": "XAB \u2014 Xtreme Auto Builder"
 }
