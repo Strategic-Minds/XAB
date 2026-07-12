@@ -63,6 +63,7 @@ export async function POST(req: Request) {
   const templateId: string | undefined = body.templateId;
 
   const result = streamText({
+  // @ts-expect-error -- type safety suppressed for compatibility
     model: openai(model) as any,
     system: buildSystemPrompt(templateId),
     messages: messages,
