@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: playbooks, error } = await supabase
       .from('playbooks')
       .select('playbook_id, name, slug, category, trigger_type, owner_agent, is_active, last_run_at, last_run_status, run_count, success_count, estimated_duration_seconds')
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     const { playbook_id, trigger_payload } = await req.json();
     if (!playbook_id) return NextResponse.json({ error: 'playbook_id required' }, { status: 400 });
 
-    const supabase = createClient();
+    const supabase = await createClient();
     const run_id = `PB-RUN-${Date.now()}`;
 
     await supabase.from('playbook_runs').insert({
