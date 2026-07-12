@@ -117,7 +117,7 @@ export function Sidebar({ displayName = "User", initials = "U", email = "" }: Si
   const router = useRouter();
 
   async function handleSignOut() {
-    const supabase = createClient();
+    const supabase = await createClient();
     await supabase.auth.signOut();
     router.push("/auth/login");
     router.refresh();
