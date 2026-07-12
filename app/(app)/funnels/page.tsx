@@ -148,7 +148,7 @@ function CreateFunnelModal({
     setLoading(true);
     setError(null);
 
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setError("Not authenticated"); setLoading(false); return; }
 
@@ -339,7 +339,7 @@ function StepEditorPanel({
   async function addStep() {
     if (!newStepName.trim()) return;
     setSaving(true);
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setSaving(false); return; }
 
@@ -359,7 +359,7 @@ function StepEditorPanel({
   }
 
   async function deleteStep(stepId: string) {
-    const supabase = createClient();
+    const supabase = await createClient();
     await supabase.from("funnel_steps").delete().eq("id", stepId);
     setSteps(prev => prev.filter(s => s.id !== stepId));
   }
@@ -525,7 +525,7 @@ export default function FunnelsPage() {
   React.useEffect(() => {
     async function loadFunnels() {
       setLoading(true);
-      const supabase = createClient();
+      const supabase = await createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setFunnels(DEMO_FUNNELS);
@@ -581,7 +581,7 @@ export default function FunnelsPage() {
       setFunnels(prev => prev.filter(f => f.id !== id));
       return;
     }
-    const supabase = createClient();
+    const supabase = await createClient();
     await supabase.from("funnels").delete().eq("id", id);
     setFunnels(prev => prev.filter(f => f.id !== id));
   }
@@ -589,7 +589,7 @@ export default function FunnelsPage() {
   async function toggleStatus(funnel: Funnel) {
     const newStatus: FunnelStatus = funnel.status === "active" ? "paused" : "active";
     if (!funnel.id.startsWith("demo-")) {
-      const supabase = createClient();
+      const supabase = await createClient();
       await supabase.from("funnels").update({ status: newStatus }).eq("id", funnel.id);
     }
     setFunnels(prev => prev.map(f => f.id === funnel.id ? { ...f, status: newStatus } : f));
