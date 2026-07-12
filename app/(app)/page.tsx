@@ -1,10 +1,5 @@
 "use server";
-import dynamic from "next/dynamic";
-
-const DashboardClient = dynamic(
-  () => import("@/components/dashboard/DashboardClient"),
-  { ssr: false }
-);
+import DashboardClient from "@/components/dashboard/DashboardClient";
 
 export default function Page() {
   return <DashboardClient />;
