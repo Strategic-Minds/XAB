@@ -1,79 +1,40 @@
-# ARCHITECTURE — REALITY OS XAB
-> Status: PLANNING PHASE. No code exists yet.
+# ARCHITECTURE — XAB
+> Status: DISCOVERY PHASE. No implementation yet.
 
-## System Vision
-REALITY OS is an intent-to-system compiler. A user describes a business outcome; the system
-coordinates software, agents, workflows, data, validation, and governance as one operating environment.
+## System Purpose
+XAB (Xtreme Auto Builder) is a governed universal system factory.
+It translates operator intent into coordinated software, agents, workflows, data, and governance.
 
 ## Tech Stack (planned)
-| Layer | Technology | Source |
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| UI | Radix UI + Tailwind + Design Tokens |
+| Database | Supabase (pgvector + RLS) |
+| MCP | Remote gateway — OAuth 2.1, Streamable HTTP |
+| Deployment | Vercel |
+| Testing | Playwright + Vitest + axe-core |
+
+## MCP Architecture
+- Remote MCP gateway hosted on Vercel
+- Separate authenticated clients: Base44 + GPT
+- OAuth 2.1 with PKCE + protected-resource metadata
+- 3 OpenAPI packs: CORE_ORCHESTRATOR, FINANCE_INTELLIGENCE, SCRAPER_INTELLIGENCE (30 ops each)
+- 36 MCP tools with scopes, budgets, receipts
+- Donor: Strategic-Minds/AUTO_BUILDER-V1 (selective MCP components)
+
+## Source Authority
+1. Jeremy's explicit instruction
+2. This repository (XAB)
+3. Drive workbooks: https://drive.google.com/drive/folders/1M6WQImzn7khdlpwSYIqoe_ngrf2iui5J
+4. Base44 app 6a4ae522852a5e08bfa42450
+5. Supabase (project TBD)
+6. Vercel (project TBD)
+
+## Donor Map
+| Component | Donor | Rule |
 |---|---|---|
-| Framework | Next.js 15 (App Router) | Proven in V1/V2 |
-| UI | Radix UI + Tailwind + Design Tokens | Donor: AUTOBUILDER-V2 |
-| State | React Query / SWR + Zustand | Standard |
-| AI | @ai-sdk/openai | Donor: AUTOBUILDER-V2 |
-| Database | Supabase (pgvector + RLS) | Designated project TBD |
-| Auth | Supabase Auth with MFA | Standard |
-| MCP | Custom OAuth 2.1 remote gateway | New build |
-| Deployment | Vercel | Standard |
-| Testing | Playwright + Vitest + axe-core | Standard |
-| Observability | OpenTelemetry (OTLP) | New build |
-
-## Directory Structure (planned)
-```
-app/
-  (marketing)/
-  (dashboard)/
-    command-center/
-    projects/
-    agents/
-    build-queue/
-    financial/
-    intelligence/
-    receipts/
-    governance/
-    system-health/
-    settings/
-  api/
-    v1/
-    cron/
-    webhooks/
-    mcp/
-components/
-  ui/
-  charts/
-  adaptive/
-  layouts/
-lib/
-  tokens/
-  validation/
-  auth/
-  memory/
-supabase/
-  migrations/
-  seeds/
-scripts/
-  validate-*.mjs
-docs/
-  architecture/
-  receipts/
-  audit/
-.github/
-  workflows/
-    ci.yml
-```
-
-## Donor Repository Map
-| Component | Donor | Notes |
-|---|---|---|
-| Frontend pages (30+) | AUTOBUILDER-V2 | Evaluate each individually, not blind copy |
-| MCP server patterns | AUTO_BUILDER-V1 | Selective, validate OAuth 2.1 compliance |
-| Governance/approval matrix | AUTO_BUILDER-V1 | Adapt to XAB |
-| Validation scripts | AUTO_BUILDER-V1 | Port and expand |
-| Engine services (8) | AUTO_BUILDER-V1 | Port to XAB structure |
-| AI SDK integration | AUTOBUILDER-V2 | Direct use |
-
-## See Also
-- `GOVERNANCE.md` — protected actions and approval matrix
-- `docs/REALITY_OS_XAB_PLANNING_HANDOFF.md` — full phase plan, risk register, ceiling matrix
-- Drive: `01_Architecture/` — architecture decision records
+| MCP server implementations | AUTO_BUILDER-V1 | Selective — evaluate each file individually |
+| Frontend pages | AUTOBUILDER-V2 | Selective — not blind copy |
+| Engine services | AUTO_BUILDER-V1 | Selective |
+| Governance patterns | AUTO_BUILDER-V1 | Adapt to XAB |
