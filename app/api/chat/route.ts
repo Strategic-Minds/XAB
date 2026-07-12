@@ -9,7 +9,6 @@ import { generateSystemPrompt, ADVANCED } from "@/lib/ai-config";
 export const maxDuration = 60;
 
 const openai = createOpenAI({
-  defaultObjectGenerationMode: "json",
   baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
     ? 'https://ai-gateway.vercel.sh/v1'
     : undefined,
