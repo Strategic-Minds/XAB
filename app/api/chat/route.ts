@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = streamText({
-      model: openai(modelId),
+      model: openai(modelId) as any,
       system,
       tools,
       messages,
