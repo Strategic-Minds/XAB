@@ -17,7 +17,7 @@
     "audit": "npm audit --audit-level=high"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^4.0.7",
+    "@ai-sdk/openai": "^3.8.0",
     "@ai-sdk/react": "^4.0.16",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@modelcontextprotocol/sdk": "^1.26.0",
