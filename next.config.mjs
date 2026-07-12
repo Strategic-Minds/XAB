@@ -1,4 +1,5 @@
 /** @type {import("next").NextConfig} */
+const path = require('path');
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -23,6 +24,7 @@ const nextConfig = {
       },
     ];
   },
+  outputFileTracingRoot: path.join(__dirname),
 };
 
 export default nextConfig;
