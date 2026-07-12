@@ -1,5 +1,6 @@
 import {
   streamText,
+  type CoreMessage,
 } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { getTemplateById } from "@/lib/vercel-templates";
@@ -57,7 +58,7 @@ When building components or pages for this template:
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const messages: {role: string; content: string; id?: string}[] = body.messages ?? [];
+  const messages = (body.messages ?? []) as CoreMessage[];
   const model: string = body.model ?? "openai/gpt-4.1";
   const templateId: string | undefined = body.templateId;
 
