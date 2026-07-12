@@ -14,6 +14,8 @@ export const dynamic = 'force-dynamic';
 
 // Internal schedule dispatch table (all handled here, no other Vercel crons)
 const INTERNAL_SCHEDULES = [
+    { name: 'validation-quick',      every_ticks: 3,   description: 'Quick validation run: build + API + security (every 15min)' },
+  { name: 'validation-full',        every_ticks: 12,  description: 'Full validation suite: all 50 tests, UI, user flows (every 1h during build hours)' },
   { name: 'queue-maintenance',     every_ticks: 1,   description: 'Recover expired leases, promote ready DAG nodes, enforce fairness' },
   { name: 'dispatch-builds',       every_ticks: 1,   description: 'Claim build jobs within concurrency and cost budgets' },
   { name: 'security-scan',         every_ticks: 72,  description: 'npm audit, secret scan, header check, RLS test (every 6h)' },
