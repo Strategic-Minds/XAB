@@ -45,7 +45,7 @@ export async function GET(request: Request) {
 
   let supabase: ReturnType<typeof createClient>;
   try {
-    supabase = createClient();
+    supabase = await createClient();
   } catch {
     // Supabase not configured — still return healthy
     return NextResponse.json({ status: 'ok', run_id, tick, note: 'Supabase not configured' });
