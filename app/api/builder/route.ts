@@ -1,6 +1,5 @@
 import {
   streamText,
-  UIMessage,
 } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { getTemplateById } from "@/lib/vercel-templates";
