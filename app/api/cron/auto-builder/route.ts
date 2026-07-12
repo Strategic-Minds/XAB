@@ -34,7 +34,7 @@ export async function GET(request: Request) {
   }
 
   // ── IDEMPOTENCY / LEASE ──────────────────────────────────────
-  const supabase = createClient();
+  const supabase = await createClient();
   const bucket = Math.floor(Date.now() / 300_000); // 5-min bucket
   const idempotencyKey = `heartbeat-${bucket}`;
 
