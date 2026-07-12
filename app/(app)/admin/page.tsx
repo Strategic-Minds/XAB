@@ -135,7 +135,7 @@ export default function AdminPage() {
                     <span className={cn(
                       "status-dot shrink-0",
                       service.status === "operational" ? "online" :
-                      service.status === "degraded" ? "warning" : "error"
+                      service.status === "degraded" ? "secondary" : "error"
                     )} />
                     <span className="flex-1 text-sm text-[var(--color-foreground)]">{service.name}</span>
                     {service.latency && (
@@ -212,7 +212,7 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-[var(--color-foreground)]">{run.workflow_name ?? run.workflowId ?? "—"}</td>
                         <td className="px-5 py-3">
                           <Badge variant={
-                            run.status === "success" ? "default" :
+                            run.status === "default" ? "default" :
                             run.status === "running" ? "default" :
                             run.status === "failed" ? "destructive" : "outline"
                           }>{run.status}</Badge>
@@ -220,7 +220,7 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-[var(--color-muted-foreground)]"><RelativeTime date={new Date(run.started_at ?? run.startedAt)} /></td>
                         <td className="px-5 py-3 text-[var(--color-muted-foreground)]">{run.duration_ms ? `${Math.round(run.duration_ms / 1000)}s` : "—"}</td>
                         <td className="px-5 py-3">
-                          <Button variant="ghost" size="icon-sm"><Eye className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="sm"><Eye className="w-3.5 h-3.5" /></Button>
                         </td>
                       </tr>
                     ))}
@@ -345,7 +345,7 @@ export default function AdminPage() {
                         </td>
                               <td className="px-5 py-3 text-[var(--color-muted-foreground)]"><RelativeTime date={user.lastSeen} /></td>
                         <td className="px-5 py-3">
-                          <Button variant="ghost" size="icon-sm"><MoreHorizontal className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="sm"><MoreHorizontal className="w-3.5 h-3.5" /></Button>
                         </td>
                       </tr>
                     ))}
