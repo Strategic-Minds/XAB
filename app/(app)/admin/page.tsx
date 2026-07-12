@@ -145,8 +145,8 @@ export default function AdminPage() {
                       <span className="text-[11px] text-[var(--color-muted-foreground)]">{service.uptime}%</span>
                     )}
                     <Badge variant={
-                      service.status === "operational" ? "success" :
-                      service.status === "degraded" ? "warning" : "danger"
+                      service.status === "operational" ? "default" :
+                      service.status === "degraded" ? "secondary" : "destructive"
                     }>
                       {service.status === "operational" ? "OK" : service.status === "degraded" ? "SLOW" : "DOWN"}
                     </Badge>
@@ -189,7 +189,7 @@ export default function AdminPage() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle>Workflow Queue & Runs</CardTitle>
-                <Badge variant="primary">{workflowRuns.filter((r: any) => r.status === "running").length} running</Badge>
+                <Badge variant="default">{workflowRuns.filter((r: any) => r.status === "running").length} running</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -212,9 +212,9 @@ export default function AdminPage() {
                         <td className="px-5 py-3 text-[var(--color-foreground)]">{run.workflow_name ?? run.workflowId ?? "—"}</td>
                         <td className="px-5 py-3">
                           <Badge variant={
-                            run.status === "success" ? "success" :
-                            run.status === "running" ? "primary" :
-                            run.status === "failed" ? "danger" : "muted"
+                            run.status === "success" ? "default" :
+                            run.status === "running" ? "default" :
+                            run.status === "failed" ? "destructive" : "outline"
                           }>{run.status}</Badge>
                         </td>
                         <td className="px-5 py-3 text-[var(--color-muted-foreground)]"><RelativeTime date={new Date(run.started_at ?? run.startedAt)} /></td>
@@ -284,7 +284,7 @@ export default function AdminPage() {
                           {agent.last_run_at ?? agent.lastRunAt ? <RelativeTime date={new Date(agent.last_run_at ?? agent.lastRunAt)} /> : "Never"}
                         </td>
                         <td className="px-5 py-3">
-                          <Badge variant={agent.memory ? "success" : "muted"}>
+                          <Badge variant={agent.memory ? "default" : "outline"}>
                             {agent.memory ? "On" : "Off"}
                           </Badge>
                         </td>
@@ -327,7 +327,7 @@ export default function AdminPage() {
                               </AvatarFallback>
                             </Avatar>
                             <span className="font-medium text-[var(--color-foreground)]">{user.name}</span>
-                            {user.role === "owner" && <Badge variant="primary">Owner</Badge>}
+                            {user.role === "owner" && <Badge variant="default">Owner</Badge>}
                           </div>
                         </td>
                         <td className="px-5 py-3 text-[var(--color-muted-foreground)]">{user.email}</td>
@@ -424,8 +424,8 @@ export default function AdminPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge variant={
-                      flag.env === "prod" ? "success" :
-                      flag.env === "beta" ? "warning" : "muted"
+                      flag.env === "prod" ? "default" :
+                      flag.env === "beta" ? "secondary" : "outline"
                     }>
                       {flag.env}
                     </Badge>
