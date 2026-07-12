@@ -43,9 +43,9 @@ export async function GET(request: Request) {
   const run_id = `HB-${tick}-${Date.now()}`;
   const started_at = new Date().toISOString();
 
-  let supabase: ReturnType<typeof createClient>;
+  let supabase: Awaited<ReturnType<typeof createClient>>;
   try {
-    supabase = await await await await await createClient();
+    supabase = await createClient();
   } catch {
     // Supabase not configured — still return healthy
     return NextResponse.json({ status: 'ok', run_id, tick, note: 'Supabase not configured' });
