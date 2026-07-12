@@ -68,7 +68,7 @@ export async function quarantineEntity(
   detected_by: string,
   payload?: Record<string, unknown>
 ): Promise<string> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const quarantine_id = `QUAR-${entity_type.toUpperCase()}-${Date.now()}`;
 
   await supabase.from('quarantine').insert({
@@ -90,7 +90,7 @@ export async function scanJobPayload(job_id: string, payload: Record<string, unk
   const content = JSON.stringify(payload);
   const result = scanContent(content);
   if (result.quarantined) {
-    const supabase = createClient();
+    const supabase = await createClient();
     await supabase.from('job_queue').update({ status: 'QUARANTINED', updated_at: new Date().toISOString() }).eq('job_id', job_id);
     const qId = await quarantineEntity(job_id, 'JOB', result.reason!, result.severity!, 'QUARANTINE-ENGINE', payload);
     return { ...result, quarantine_id: qId };
