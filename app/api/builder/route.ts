@@ -1,10 +1,8 @@
 import {
-  convertToModelMessages,
-  createUIMessageStreamResponse,
   streamText,
-  toUIMessageStream,
   UIMessage,
 } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { getTemplateById } from "@/lib/vercel-templates";
 
 export const maxDuration = 60;
@@ -26,6 +24,13 @@ TAILWIND TIPS:
 - Prefer flex/grid layouts. Use gap-* for spacing.
 - Use text-balance on headings. Use backdrop-blur for glassmorphism.
 - Responsive: use sm:, md:, lg: prefixes freely.`;
+
+const openai = createOpenAI({
+  baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
+    ? 'https://ai-gateway.vercel.sh/v1'
+    : undefined,
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 function buildSystemPrompt(templateId?: string): string {
   if (!templateId) return BASE_SYSTEM_PROMPT;
@@ -58,12 +63,10 @@ export async function POST(req: Request) {
   const templateId: string | undefined = body.templateId;
 
   const result = streamText({
-    model,
+    model: openai(model),
     system: buildSystemPrompt(templateId),
-    messages: await convertToModelMessages(messages),
+    messages: messages,
   });
 
-  return createUIMessageStreamResponse({
-    stream: toUIMessageStream({ stream: result.stream }),
-  });
+  return result.toDataStreamResponse();
 }
