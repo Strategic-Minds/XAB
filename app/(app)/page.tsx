@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import DashboardClient from "@/components/dashboard/DashboardClient";
 
 export default function Page() {
