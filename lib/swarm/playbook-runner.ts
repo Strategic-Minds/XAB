@@ -28,7 +28,7 @@ export async function startPlaybook(
   trigger_payload: Record<string, unknown> = {},
   triggered_by = 'SYSTEM'
 ): Promise<string> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const run_id = `PB-RUN-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
 
   const { data: playbook } = await supabase
@@ -67,7 +67,7 @@ export async function completePlaybookStep(
   step: number,
   result: StepResult
 ): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: run } = await supabase.from('playbook_runs').select('step_results, total_steps').eq('run_id', run_id).single();
   if (!run) return;
 
@@ -84,7 +84,7 @@ export async function completePlaybookStep(
 }
 
 export async function getActivePlaybooks(): Promise<Array<{ playbook_id: string; name: string; trigger_type: string; owner_agent: string }>> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase
     .from('playbooks')
     .select('playbook_id, name, trigger_type, owner_agent')
@@ -94,7 +94,7 @@ export async function getActivePlaybooks(): Promise<Array<{ playbook_id: string;
 }
 
 export async function getPlaybookStatus(run_id: string): Promise<PlaybookRun | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data } = await supabase.from('playbook_runs').select('*').eq('run_id', run_id).single();
   return data as PlaybookRun | null;
 }
