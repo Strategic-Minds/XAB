@@ -97,14 +97,21 @@ async function callTool(name: string, args: Record<string, unknown>) {
   }
 }
 
-export async function POST(req: NextRequest, context: {
-  const { transport } = await context.params; params: Promise<{ transport: string }> }) {
-  const cron = req.headers.get('authorization');
+
+// Next.js 15: params is a Promise — must be awaited
+export async function POST(
+  req: NextRequest,
+  context: { params: Promise<{ transport: string }> }
+) {
+  const { transport } = await context.params;
   const body = await req.json().catch(() => ({}));
   const { method, id, params: rpcParams } = body;
 
   if (method === 'initialize') {
-    return NextResponse.json({ jsonrpc: '2.0', id, result: { protocolVersion: '2024-11-05', capabilities: { tools: {} }, serverInfo: { name: 'xab-mcp', version: XAB_VERSION } } });
+    return NextResponse.json({
+      jsonrpc: '2.0', id,
+      result: { protocolVersion: '2024-11-05', capabilities: { tools: {} }, serverInfo: { name: 'xab-mcp', version: XAB_VERSION } }
+    });
   }
   if (method === 'tools/list') {
     return NextResponse.json({ jsonrpc: '2.0', id, result: { tools: TOOLS } });
@@ -113,15 +120,30 @@ export async function POST(req: NextRequest, context: {
     const { name, arguments: toolArgs } = rpcParams || {};
     try {
       const result = await callTool(name, toolArgs || {});
-      return NextResponse.json({ jsonrpc: '2.0', id, result: { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] } });
+      return NextResponse.json({
+        jsonrpc: '2.0', id,
+        result: { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] }
+      });
     } catch (err: unknown) {
       return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32603, message: String(err) } });
     }
   }
+  // Unused but referenced to avoid unused var warning
+  void transport;
   return NextResponse.json({ jsonrpc: '2.0', id, error: { code: -32601, message: `Method not found: ${method}` } }, { status: 404 });
 }
 
-export async function GET(req: NextRequest, context: {
-  const { transport } = await context.params; params: Promise<{ transport: string }> }) {
-  return NextResponse.json({ name: 'xab-mcp', version: XAB_VERSION, tools: TOOLS.length, endpoint: '/api/mcp/mcp' });
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ transport: string }> }
+) {
+  const { transport } = await context.params;
+  return NextResponse.json({
+    name: 'xab-mcp',
+    version: XAB_VERSION,
+    transport,
+    tools: TOOLS.length,
+    endpoint: '/api/mcp/mcp',
+    timestamp: new Date().toISOString(),
+  });
 }
