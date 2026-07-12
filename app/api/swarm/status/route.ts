@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const [agents, queues, sandboxes, quarantine, dlq, score] = await Promise.all([
       supabase.from('swarm_agents').select('agent_id, agent_name, agent_type, status, current_job_count, total_jobs_run, last_active_at').order('agent_type'),
