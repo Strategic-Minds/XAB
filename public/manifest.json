@@ -1,0 +1,17 @@
+{
+  "name": "Xtreme Auto Builder",
+  "short_name": "XAB",
+  "description": "Autonomous AI Business Operating System — agents, workflows, CRM, and automation in one platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08080a",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "categories": ["business", "productivity"],
+  "lang": "en-US"
+}
