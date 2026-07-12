@@ -1,24 +1,23 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/e2e',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  timeout: 30000,
+  retries: 2,
+  workers: process.env.CI ? 2 : 4,
+  reporter: [
+    ['list'],
+    ['json', { outputFile: 'test-results/results.json' }],
+    ['html', { outputFolder: 'test-results/html', open: 'never' }],
+  ],
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    baseURL: process.env.TEST_BASE_URL || 'https://xab-system.vercel.app',
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on',
+    video: 'on-first-retry',
   },
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'chromium-headless', use: { browserName: 'chromium', headless: true } },
+    { name: 'mobile-chrome', use: { browserName: 'chromium', headless: true, viewport: { width: 390, height: 844 }, isMobile: true } },
   ],
-  webServer: process.env.CI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-  },
 });
