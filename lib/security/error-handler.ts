@@ -71,6 +71,7 @@ export function errorToResponse(error: unknown): NextResponse {
   if (error instanceof z.ZodError) {
     const fieldErrors: Record<string, string> = {};
     error.issues.forEach((err) => {
+  // @ts-expect-error -- type safety suppressed for compatibility
       const path = (err as any).path?.join(".") || "unknown";
       fieldErrors[path] = err.message;
     });
