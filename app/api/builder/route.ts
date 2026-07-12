@@ -62,7 +62,7 @@ export async function POST(req: Request) {
   const templateId: string | undefined = body.templateId;
 
   const result = streamText({
-    model: openai(model),
+    model: openai( as anymodel),
     system: buildSystemPrompt(templateId),
     messages: messages,
   });
