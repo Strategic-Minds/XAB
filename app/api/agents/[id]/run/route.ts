@@ -37,7 +37,7 @@ export async function POST(
   try {
     const startTime = Date.now();
     const result = await generateText({
-      model: openai(modelId),
+      model: openai(modelId) as any,
       system: systemPrompt,
       prompt: input,
       temperature: agent.temperature ?? 0.7,
