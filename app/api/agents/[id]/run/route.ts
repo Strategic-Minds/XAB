@@ -10,7 +10,6 @@ const openai = createOpenAI({
     ? 'https://ai-gateway.vercel.sh/v1'
     : undefined,
   apiKey: process.env.OPENAI_API_KEY || '',
-  defaultObjectGenerationMode: "json",
 });
 
 export async function POST(
