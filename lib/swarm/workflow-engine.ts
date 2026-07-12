@@ -65,7 +65,7 @@ export async function acquireWorkflowLease(
   ttl_seconds = 300,
   agent_id = 'WORKFLOW-ENGINE'
 ): Promise<boolean> {
-  const supabase = await createClient();
+  const supabase = createClient();
   try {
     const { error } = await supabase.from('workflow_leases').insert({
       lease_key: workflow_key,
@@ -80,7 +80,7 @@ export async function acquireWorkflowLease(
 }
 
 export async function releaseWorkflowLease(workflow_key: string): Promise<void> {
-  const supabase = await createClient();
+  const supabase = createClient();
   await supabase.from('workflow_leases').delete().eq('lease_key', workflow_key);
 }
 

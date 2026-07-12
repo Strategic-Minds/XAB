@@ -60,7 +60,7 @@ export async function routeTask(
 }
 
 export async function getAvailableAgent(agent_type: string): Promise<string | null> {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data } = await supabase
     .from('swarm_agents')
     .select('agent_id, current_job_count, max_concurrent_jobs')
@@ -77,7 +77,7 @@ export async function broadcastToSwarm(
   message_type: string,
   payload: Record<string, unknown>
 ): Promise<void> {
-  const supabase = await createClient();
+  const supabase = createClient();
   await supabase.from('swarm_messages').insert({
     message_id: `MSG-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
     from_agent,
