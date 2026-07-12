@@ -10,6 +10,7 @@ const openai = createOpenAI({
     ? 'https://ai-gateway.vercel.sh/v1'
     : undefined,
   apiKey: process.env.OPENAI_API_KEY || '',
+  defaultObjectGenerationMode: "json",
 });
 
 export async function POST(
@@ -31,105 +32,41 @@ export async function POST(
     return NextResponse.json({ error: "Agent not found" }, { status: 404 });
   }
 
-  const body = await req.json().catch(() => ({}));
-  const { input = {} } = body;
-
-  // Create run record
-  const { data: run } = await supabase
-    .from("agent_runs")
-    .insert({
-      agent_id: id,
-      agent_name: agent.name,
-      agent_type: agent.type ?? "general",
-      status: "running",
-      action: typeof input === "string" ? input : JSON.stringify(input),
-      metadata: { user_id: user?.id ?? null, input },
-    })
-    .select("id")
-    .single();
-
-  const runId = run?.id;
-  const startedAt = Date.now();
+  const { systemPrompt, input } = await req.json();
+  const modelId = agent.model || "gpt-4o-mini";
 
   try {
-    const modelId = agent.model
-      ? (agent.model.includes("/") ? agent.model : `openai/${agent.model}`)
-      : "openai/gpt-4o";
-
-    const systemPrompt = agent.system_prompt ??
-      `You are ${agent.name ?? "an AI agent"}. ${agent.description ?? ""}. Complete the task provided with precision. Return a structured summary of your actions and results.`;
-
+    const startTime = Date.now();
     const result = await generateText({
       model: openai(modelId),
       system: systemPrompt,
-      prompt: typeof input === "string"
-        ? input
-        : `Execute your task. Context: ${JSON.stringify(input)}`,
-      maxSteps: 5,
+      prompt: input,
+      temperature: agent.temperature ?? 0.7,
+      maxTokens: agent.max_tokens ?? 2000,
     });
 
-    const duration = Date.now() - startedAt;
+    const duration = Date.now() - startTime;
 
-    if (runId) {
-      await supabase
-        .from("agent_runs")
-        .update({
-          status: "success",
-          output: result.text,
-          completed_at: new Date().toISOString(),
-          metadata: { duration_ms: duration, usage: result.usage, model: modelId },
-        })
-        .eq("id", runId);
-    }
-    // Increment agent run_count and update last_run_at
-    await supabase.from("agents").update({
-      run_count: (agent.run_count ?? 0) + 1,
-      last_run_at: new Date().toISOString(),
-      status: "active",
-    }).eq("id", id);
+    // Log to Supabase
+    await supabase.from("agent_runs").insert({
+      agent_id: id,
+      user_id: user?.id,
+      input,
+      output: result.text,
+      model: modelId,
+      metadata: { duration_ms: duration, usage: result.usage, model: modelId },
+    });
 
     return NextResponse.json({
-      runId,
-      status: "success",
       output: result.text,
       usage: result.usage,
       duration_ms: duration,
     });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Agent run failed";
-    console.error("[XAB] Agent run error:", message);
-
-    if (runId) {
-      await supabase
-        .from("agent_runs")
-        .update({
-          status: "failed",
-          output: message,
-          completed_at: new Date().toISOString(),
-          metadata: { error: message, duration_ms: Date.now() - startedAt },
-        })
-        .eq("id", runId);
-    }
-
-    return NextResponse.json({ error: message, runId }, { status: 500 });
+  } catch (error) {
+    console.error("[agent run error]", error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    );
   }
-}
-
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json([]);
-
-  const { data } = await supabase
-    .from("agent_runs")
-    .select("id, status, action, output, started_at, completed_at, metadata")
-    .eq("agent_id", id)
-    .order("started_at", { ascending: false })
-    .limit(20);
-
-  return NextResponse.json(data ?? []);
 }
