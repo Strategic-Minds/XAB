@@ -32,7 +32,7 @@ export interface Sandbox {
 }
 
 export async function createSandbox(config: SandboxConfig): Promise<Sandbox> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const sandbox_id = `SBX-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   const autoDestroyAt = config.auto_destroy_after_seconds
     ? new Date(Date.now() + config.auto_destroy_after_seconds * 1000).toISOString()
@@ -72,7 +72,7 @@ export async function recordSandboxAction(
   action_type: string,
   payload: Record<string, unknown>
 ): Promise<string> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const action_id = `ACT-${sandbox_id}-${Date.now()}`;
   await supabase.from('sandbox_actions').insert({
     action_id, sandbox_id, job_id, action_type,
@@ -87,7 +87,7 @@ export async function completeSandboxAction(
   result: Record<string, unknown>,
   status: 'COMPLETED' | 'FAILED' | 'ROLLED_BACK' = 'COMPLETED'
 ): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.from('sandbox_actions').update({
     status,
     result,
@@ -96,7 +96,7 @@ export async function completeSandboxAction(
 }
 
 export async function destroySandbox(sandbox_id: string, reason: string): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   await supabase.from('sandboxes').update({
     status: 'DESTROYED',
     destroyed_at: new Date().toISOString(),
@@ -105,7 +105,7 @@ export async function destroySandbox(sandbox_id: string, reason: string): Promis
 }
 
 export async function checkResourceLimits(sandbox_id: string): Promise<{ ok: boolean; violations: string[] }> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: sandbox } = await supabase.from('sandboxes').select('resource_limits, actual_cost_usd, files_created, api_calls_made').eq('sandbox_id', sandbox_id).single();
   if (!sandbox) return { ok: false, violations: ['Sandbox not found'] };
 
