@@ -14,6 +14,7 @@ export function AppChatPanel() {
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status } = useChat({
+    // @ts-expect-error -- api prop valid at runtime in @ai-sdk/react v4
     api: "/api/chat",
   });
 
