@@ -4,7 +4,6 @@ import * as React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useChat } from "@ai-sdk/react";
-import { DefaultChatTransport } from "ai";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Send, Plus, Search, Sparkles, User, Code2,
@@ -218,13 +217,11 @@ function ChatPageInner() {
   const modelPickerRef = React.useRef<HTMLDivElement>(null);
 
   const { messages, sendMessage, status, stop } = useChat({
-    transport: new DefaultChatTransport({
-      api: "/api/chat",
-      body: {
-        model: selectedModel.id,
-        conversationId: activeConvId,
-      },
-    }),
+    api: "/api/chat",
+    body: {
+      model: selectedModel.id,
+      conversationId: activeConvId,
+    },
   });
 
   const isStreaming = status === "streaming" || status === "submitted";
