@@ -1,8 +1,16 @@
-import { generateText, gateway } from "ai";
+import { generateText } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 60;
+
+const openai = createOpenAI({
+  baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
+    ? 'https://ai-gateway.vercel.sh/v1'
+    : undefined,
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 export async function POST(
   req: NextRequest,
@@ -51,7 +59,7 @@ export async function POST(
         : `Execute step: "${step.name}". Previous output: ${previousOutput}. Input: ${JSON.stringify(input)}. Be concise.`;
 
       const result = await generateText({
-        model: gateway("openai/gpt-4o-mini"),
+        model: openai("openai/gpt-4o-mini"),
         system: `You are executing a step in the workflow: "${workflow.name}". Be precise and concise.`,
         prompt: stepPrompt,
       });
