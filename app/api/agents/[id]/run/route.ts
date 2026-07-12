@@ -1,8 +1,16 @@
-import { generateText, gateway, isStepCount } from "ai";
+import { generateText } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 60;
+
+const openai = createOpenAI({
+  baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
+    ? 'https://ai-gateway.vercel.sh/v1'
+    : undefined,
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 export async function POST(
   req: NextRequest,
@@ -52,12 +60,12 @@ export async function POST(
       `You are ${agent.name ?? "an AI agent"}. ${agent.description ?? ""}. Complete the task provided with precision. Return a structured summary of your actions and results.`;
 
     const result = await generateText({
-      model: gateway(modelId),
+      model: openai(modelId),
       system: systemPrompt,
       prompt: typeof input === "string"
         ? input
         : `Execute your task. Context: ${JSON.stringify(input)}`,
-      stopWhen: isStepCount(5),
+      maxSteps: 5,
     });
 
     const duration = Date.now() - startedAt;
