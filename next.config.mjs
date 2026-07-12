@@ -1,5 +1,10 @@
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import("next").NextConfig} */
-const path = require('path');
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -7,6 +12,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  outputFileTracingRoot: path.join(__dirname),
   experimental: {
     serverActions: {
       allowedOrigins: ["*"],
@@ -24,8 +30,6 @@ const nextConfig = {
       },
     ];
   },
-  outputFileTracingRoot: path.join(__dirname),
 };
 
 export default nextConfig;
-
