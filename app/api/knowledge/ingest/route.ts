@@ -1,5 +1,11 @@
 import { embed } from "ai";
-import { gateway } from "ai";
+import { streamText, generateText } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
+
+const openai = createOpenAI({
+  baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN ? 'https://ai-gateway.vercel.sh/v1' : undefined,
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
