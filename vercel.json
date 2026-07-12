@@ -4,5 +4,10 @@
       "path": "/api/cron/xab-heartbeat",
       "schedule": "*/5 * * * *"
     }
-  ]
+  ],
+  "outputFileTracingExcludes": {
+    "/*": [
+      ".next/server/app/(app)/page_client-reference-manifest.js"
+    ]
+  }
 }
