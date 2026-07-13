@@ -3,8 +3,8 @@
 import * as React from "react";
 import { 
   GitBranch, Plus, Filter, Search, Calendar, ChevronDown, 
-  TrendingUp, BarChart2, Mail, Phone, Flame, AlertCircle, 
-  Briefcase, CheckCircle2, User, Building, CircleDollarSign,
+  TrendingUp, BarChart2, Mail, Phone, Flame, Alert
+  Briefcase, Check2, User, BuildingDollarSign,
   DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -275,7 +275,7 @@ export default function PipelineClient() {
               <p className="text-2xl font-bold text-white">{formatCurrency(totalValue)}</p>
             </div>
             <div className="p-2.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
-              <CircleDollarSign className="w-5 h-5 text-indigo-400" />
+              <DollarSign className="w-5 h-5 text-indigo-400" />
             </div>
           </CardContent>
         </Card>
@@ -374,7 +374,7 @@ export default function PipelineClient() {
               <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 mb-3">
                 <div>
                   <h3 className="text-xs font-bold text-neutral-200 tracking-tight flex items-center gap-1.5">
-                    <Circle className="w-2 h-2 fill-indigo-500 text-indigo-500" />
+                    <span className="w-2 h-2 rounded-full bg-current inline-block" />
                     {stage}
                   </h3>
                   <div className="text-[10px] text-neutral-500 font-semibold mt-0.5">
@@ -390,7 +390,7 @@ export default function PipelineClient() {
               <div className="space-y-2.5 flex-1 overflow-y-auto max-h-[600px] pr-0.5">
                 {stageDeals.length === 0 ? (
                   <div className="h-28 flex flex-col items-center justify-center border border-dashed border-white/[0.03] rounded-lg text-neutral-600 text-center px-4">
-                    <AlertCircle className="w-4 h-4 mb-1.5 opacity-50" />
+                    <AlertclassName="w-4 h-4 mb-1.5 opacity-50" />
                     <span className="text-[10px] font-medium">No opportunities</span>
                   </div>
                 ) : (
