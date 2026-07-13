@@ -24,6 +24,5 @@
       "path": "/api/cron/apex20-heartbeat",
       "schedule": "*/5 * * * *"
     }
-  ],
-  "_apex20_deploy_trigger": "2026-07-13T22:50:00Z"
+  ]
 }
