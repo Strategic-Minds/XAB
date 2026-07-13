@@ -1,17 +1,30 @@
 {
-  "name": "Xtreme Auto Builder",
-  "short_name": "XAB",
-  "description": "Autonomous AI Business Operating System — agents, workflows, CRM, and automation in one platform.",
+  "name": "APEX-20 Command Center",
+  "short_name": "APEX-20",
+  "description": "JEREMY APEX-20 Sovereign AI System \u2014 UI-01 Command Center",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#08080a",
-  "theme_color": "#6366f1",
-  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
   ],
-  "screenshots": [],
-  "categories": ["business", "productivity"],
-  "lang": "en-US"
+  "categories": [
+    "productivity",
+    "business"
+  ],
+  "lang": "en",
+  "dir": "ltr"
 }
