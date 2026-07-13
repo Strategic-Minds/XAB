@@ -48,6 +48,8 @@ const navigation: NavSection[] = [
       { label: "Computer Use", href: "/computer-use", icon: Monitor },
       { label: "Knowledge Base", href: "/knowledge", icon: BookOpen },
       { label: "Memory", href: "/memory", icon: Brain },
+      { label: "Prospecting", href: "/prospecting", icon: Search },
+    
     ],
   },
   {
@@ -58,6 +60,9 @@ const navigation: NavSection[] = [
       { label: "Website Factory", href: "/website-factory", icon: Globe },
       { label: "Workflow Factory", href: "/workflow-factory", icon: Workflow },
       { label: "Agent Factory", href: "/agent-factory", icon: Bot },
+      { label: "Sequences", href: "/sequences", icon: Mail },
+      { label: "Dialer", href: "/dialer", icon: Phone },
+    
     ],
   },
   {
@@ -67,6 +72,10 @@ const navigation: NavSection[] = [
       { label: "Contacts", href: "/crm", icon: Users },
       { label: "Projects", href: "/projects", icon: FolderKanban },
       { label: "Client Portal", href: "/client-portal", icon: Building2 },
+      { label: "Pipeline", href: "/pipeline", icon: GitBranch },
+      { label: "Lead Scoring", href: "/scoring", icon: BarChart2 },
+      { label: "Enrichment", href: "/enrichment", icon: Sparkles },
+    
     ],
   },
   {
