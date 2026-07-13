@@ -2,12 +2,16 @@
   "name": "xab",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:a11y": "node scripts/validate-a11y.mjs",
@@ -81,5 +85,5 @@
     "typescript": "^5.8.3",
     "vitest": "^1.6.0"
   },
-  "description": "XAB \u2014 Xtreme Auto Builder"
+  "description": "XAB — Xtreme Auto Builder"
 }
