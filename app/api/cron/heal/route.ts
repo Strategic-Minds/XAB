@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   // 2. Find failed jobs eligible for retry
   try {
     const { data: failedJobs } = await supabase
-      .from('job_queue')
+      .from('ncp_job_queue')
       .select('id, job_id, attempt_count, max_attempts, next_retry_at')
       .eq('status', 'FAILED')
       .lt('attempt_count', supabase.rpc as never)
@@ -46,13 +46,13 @@ export async function GET(request: Request) {
   try {
     const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
     const { data: timedOut } = await supabase
-      .from('job_queue')
+      .from('ncp_job_queue')
       .select('id, job_id, assigned_agent, claimed_at')
       .eq('status', 'CLAIMED')
       .lt('claimed_at', tenMinutesAgo);
     if (timedOut && timedOut.length > 0) {
       for (const job of timedOut) {
-        await supabase.from('job_queue').update({
+        await supabase.from('ncp_job_queue').update({
           status: 'FAILED',
           last_error: 'Job timed out in CLAIMED state - returned to retry queue',
           updated_at: new Date().toISOString(),

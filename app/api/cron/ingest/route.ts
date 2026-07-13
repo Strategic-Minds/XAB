@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   // Check pending ingestion queue
   try {
     const { count } = await supabase
-      .from('job_queue')
+      .from('ncp_job_queue')
       .select('*', { count: 'exact', head: true })
       .eq('queue_name', 'research')
       .eq('status', 'PENDING');

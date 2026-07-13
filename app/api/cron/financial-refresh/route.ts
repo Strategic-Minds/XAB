@@ -28,7 +28,7 @@ export async function GET(request: Request) {
   // Queue refresh jobs for stale products
   try {
     const jobId = `JOB-FIN-${runId}`;
-    await supabase.from('job_queue').insert({
+    await supabase.from('ncp_job_queue').insert({
       job_id: jobId,
       queue_name: 'research',
       job_type: 'XPS_PRICE_REFRESH',

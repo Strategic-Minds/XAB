@@ -42,7 +42,7 @@ export async function enqueue(
   const supabase = await createClient();
   const job_id = `JOB-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 
-  const { error } = await supabase.from('job_queue').insert({
+  const { error } = await supabase.from('ncp_job_queue').insert({
     job_id,
     queue_name: options.queue_name ?? 'default',
     job_type,
@@ -69,7 +69,7 @@ export async function claim(
   const supabase = await createClient();
 
   let query = supabase
-    .from('job_queue')
+    .from('ncp_job_queue')
     .select('*')
     .eq('queue_name', queue_name)
     .eq('status', 'PENDING')
@@ -86,7 +86,7 @@ export async function claim(
 
   const job = jobs[0];
   const { error } = await supabase
-    .from('job_queue')
+    .from('ncp_job_queue')
     .update({
       status: 'CLAIMED',
       assigned_agent: agent_id,
@@ -103,7 +103,7 @@ export async function claim(
 
 export async function complete(job_id: string, result: Record<string, unknown>): Promise<void> {
   const supabase = await createClient();
-  await supabase.from('job_queue').update({
+  await supabase.from('ncp_job_queue').update({
     status: 'COMPLETED',
     completed_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -116,7 +116,7 @@ export async function fail(
   shouldRetry = true
 ): Promise<void> {
   const supabase = await createClient();
-  const { data: job } = await supabase.from('job_queue').select('attempt_count, max_attempts, retry_backoff_seconds').eq('job_id', job_id).single();
+  const { data: job } = await supabase.from('ncp_job_queue').select('attempt_count, max_attempts, retry_backoff_seconds').eq('job_id', job_id).single();
 
   if (!job) return;
 
@@ -126,7 +126,7 @@ export async function fail(
     ? new Date(Date.now() + backoff * 1000).toISOString()
     : null;
 
-  await supabase.from('job_queue').update({
+  await supabase.from('ncp_job_queue').update({
     status: exhausted ? 'DEAD' : 'FAILED',
     last_error: error,
     last_error_at: new Date().toISOString(),
@@ -136,7 +136,7 @@ export async function fail(
 
   // Move to DLQ if exhausted
   if (exhausted) {
-    const { data: fullJob } = await supabase.from('job_queue').select('*').eq('job_id', job_id).single();
+    const { data: fullJob } = await supabase.from('ncp_job_queue').select('*').eq('job_id', job_id).single();
     if (fullJob) {
       await supabase.from('dead_letter_queue').insert({
         dlq_id: `DLQ-${job_id}`,
@@ -153,10 +153,10 @@ export async function fail(
 
 export async function quarantine(job_id: string, reason: string, severity = 'S3_HIGH'): Promise<void> {
   const supabase = await createClient();
-  const { data: job } = await supabase.from('job_queue').select('*').eq('job_id', job_id).single();
+  const { data: job } = await supabase.from('ncp_job_queue').select('*').eq('job_id', job_id).single();
   if (!job) return;
 
-  await supabase.from('job_queue').update({ status: 'QUARANTINED', updated_at: new Date().toISOString() }).eq('job_id', job_id);
+  await supabase.from('ncp_job_queue').update({ status: 'QUARANTINED', updated_at: new Date().toISOString() }).eq('job_id', job_id);
   await supabase.from('quarantine').insert({
     quarantine_id: `QUAR-JOB-${job_id}`,
     quarantine_type: 'JOB',

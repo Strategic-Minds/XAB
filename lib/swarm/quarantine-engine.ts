@@ -91,7 +91,7 @@ export async function scanJobPayload(job_id: string, payload: Record<string, unk
   const result = scanContent(content);
   if (result.quarantined) {
     const supabase = await createClient();
-    await supabase.from('job_queue').update({ status: 'QUARANTINED', updated_at: new Date().toISOString() }).eq('job_id', job_id);
+    await supabase.from('ncp_job_queue').update({ status: 'QUARANTINED', updated_at: new Date().toISOString() }).eq('job_id', job_id);
     const qId = await quarantineEntity(job_id, 'JOB', result.reason!, result.severity!, 'QUARANTINE-ENGINE', payload);
     return { ...result, quarantine_id: qId };
   }
