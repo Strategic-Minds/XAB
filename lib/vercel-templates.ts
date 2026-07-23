@@ -95,7 +95,6 @@ Chat messages stored in DB. Multi-turn conversation with model switching.`,
     stack: ["Next.js 16", "AI SDK v7", "AI Gateway", "TypeScript"],
     features: ["streamText", "useChat hook", "AI Gateway models", "Streaming responses"],
     systemPromptContext: `Template: Next.js AI Starter (minimal AI SDK v7 example).
-  // @ts-expect-error -- UIMessage not exported in ai@4.x
 API route: app/api/chat/route.ts with streamText() returning createUIMessageStreamResponse().
 Client: useChat() hook with DefaultChatTransport pointing to /api/chat.
 No database, no auth. Single-file simplicity. AI Gateway for model access.`,
