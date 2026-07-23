@@ -399,6 +399,5 @@ export function requiresConfirmation(toolName: string): boolean {
     }
   }
 
-  // @ts-expect-error -- type safety suppressed for compatibility
   return (TOOL_SETTINGS.requireConfirmation as any)[toolName] ?? false;
 }
