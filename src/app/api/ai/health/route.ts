@@ -4,16 +4,26 @@ import { chat } from '@/lib/ai-gateway/client';
 export async function GET() {
   try {
     const ping = await chat([{ role: 'user', content: 'ping' }], {
-      model: 'openai/gpt-4o-mini', maxTokens: 5
+      model: 'openai/gpt-4o-mini',
+      max_tokens: 5,
+      timeout_ms: 15000,
     });
+
     return NextResponse.json({
       status: 'ok',
-      gateway: 'vercel-ai-gateway',
-      endpoint: 'https://ai-gateway.vercel.sh/v1',
+      gateway: 'configured',
       ping_response: ping,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (err) {
-    return NextResponse.json({ status: 'error', error: String(err) }, { status: 503 });
+    const message = err instanceof Error ? err.message : 'AI health check failed';
+    return NextResponse.json(
+      {
+        status: 'error',
+        error: message,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 503 },
+    );
   }
 }
