@@ -29,7 +29,7 @@ export interface Receipt {
 export function writeReceipt(
   type: Receipt['receipt_type'],
   runId: string,
-  payload: Omit<Receipt, 'receipt_id' | 'timestamp' | 'hash' | 'repo_id' | 'repo_name'>
+  payload: Omit<Receipt, 'receipt_id' | 'receipt_type' | 'run_id' | 'timestamp' | 'hash' | 'repo_id' | 'repo_name'>
 ): Receipt {
   const receipt_id = `RCT-${type}-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   const timestamp = new Date().toISOString();
