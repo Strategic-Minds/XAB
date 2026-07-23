@@ -1,0 +1,36 @@
+name: Security Scan (Weekly)
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-audit:
+    name: Full Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Full audit report
+        run: npm audit --json > audit-report.json || true
+      - name: Parse critical findings
+        run: |
+          node -e "
+            const report = require('./audit-report.json');
+            const vulns = report.vulnerabilities || {};
+            const critical = Object.values(vulns).filter(v => ['critical','high'].includes(v.severity));
+            console.log('Critical/High vulnerabilities:', critical.length);
+            critical.forEach(v => console.log(' -', v.name, v.severity, v.range));
+            if (critical.length > 0) process.exit(1);
+          "
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-audit-report
+          path: audit-report.json
