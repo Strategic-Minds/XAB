@@ -110,7 +110,7 @@ function extractMainContent(html: string): string {
     .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "");
 
   // Extract text from common content tags
-  const textMatch = content.match(/<(main|article|div[^>]*class="[^"]*content[^"]*")[^>]*>(.*?)<\/(main|article|div)>/is);
+  const textMatch = content.match(/<(main|article|div[^>]*class="[^"]*content[^"]*")[^>]*>([\s\S]*?)<\/(main|article|div)>/i);
 
   if (textMatch) {
     content = textMatch[2];
