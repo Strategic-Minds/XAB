@@ -37,7 +37,8 @@ export async function POST(
   try {
     const startTime = Date.now();
     const result = await generateText({
-      model: openai(modelId) as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        model: openai(modelId) as any as any,
       system: systemPrompt,
       prompt: input,
       temperature: agent.temperature ?? 0.7,
