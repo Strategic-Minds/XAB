@@ -1,0 +1,7 @@
+# XAB CODEOWNERS — All changes require owner review
+* @xps-admin
+/app/api/cron/ @xps-admin
+/lib/ @xps-admin
+/.github/ @xps-admin
+next.config.mjs @xps-admin
+middleware.ts @xps-admin
