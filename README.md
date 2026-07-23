@@ -23,3 +23,6 @@ XAB is a governed universal system factory — an intent-to-system compiler that
 
 ## Protected Actions
 All protected actions require exact approval phrases. See `GOVERNANCE.md`.
+
+
+<!-- build-trigger: 2026-07-23T21:58:49.174522 -->
