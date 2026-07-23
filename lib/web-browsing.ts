@@ -70,7 +70,6 @@ export async function webSearch(
       throw new Error(`Serper API error: ${response.status}`);
     }
 
-  // @ts-expect-error -- type safety suppressed for compatibility
     const data = (await response.json()) as any;
     const results: SearchResult[] = [];
 
