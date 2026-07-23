@@ -13,9 +13,7 @@ export function AppChatPanel() {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-  const { messages, sendMessage, status } = useChat({
-    api: "/api/chat",
-  });
+  const { messages, sendMessage, status } = useChat();
 
   const isStreaming = status === "streaming" || status === "submitted";
 
