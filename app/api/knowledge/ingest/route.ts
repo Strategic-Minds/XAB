@@ -1,16 +1,30 @@
-import { embed } from "ai";
-import { createOpenAI } from '@ai-sdk/openai';
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 60;
 
-const openai = createOpenAI({
-  baseURL: process.env.VERCEL_AI_GATEWAY_TOKEN
-    ? 'https://ai-gateway.vercel.sh/v1'
-    : undefined,
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+const GATEWAY_BASE = process.env.VERCEL_AI_GATEWAY_TOKEN
+  ? 'https://ai-gateway.vercel.sh/v1'
+  : 'https://api.openai.com/v1';
+
+const AI_KEY = process.env.OPENAI_API_KEY ?? '';
+
+async function embedText(text: string): Promise<number[]> {
+  const res = await fetch(`${GATEWAY_BASE}/embeddings`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.VERCEL_AI_GATEWAY_TOKEN ?? AI_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'openai/text-embedding-3-small',
+      input: text,
+    }),
+  });
+  if (!res.ok) throw new Error(`Embedding API error: ${res.status}`);
+  const data = await res.json() as { data: { embedding: number[] }[] };
+  return data.data[0].embedding;
+}
 
 function chunkText(text: string, chunkSize = 512, overlap = 64): string[] {
   const words = text.split(/\s+/);
@@ -55,15 +69,16 @@ export async function POST(req: NextRequest) {
     }
 
     const chunks = chunkText(content);
-    const embeddingModel = openai.textEmbeddingModel("text-embedding-3-small");
+    const chunkInserts: {
+      knowledge_id: string;
+      content: string;
+      embedding: string;
+      chunk_index: number;
+      token_count: number;
+    }[] = [];
 
-    const chunkInserts: { knowledge_id: string; content: string; embedding: string; chunk_index: number; token_count: number }[] = [];
     for (let i = 0; i < chunks.length; i++) {
-      const { embedding } = await embed({
-        model: embeddingModel,
-        value: chunks[i],
-      });
-
+      const embedding = await embedText(chunks[i]);
       chunkInserts.push({
         knowledge_id: doc.id,
         content: chunks[i],
@@ -84,11 +99,7 @@ export async function POST(req: NextRequest) {
       .update({ status: "ready", chunk_count: chunks.length })
       .eq("id", doc.id);
 
-    return NextResponse.json({
-      id: doc.id,
-      chunks: chunks.length,
-      status: "ready",
-    });
+    return NextResponse.json({ id: doc.id, chunks: chunks.length, status: "ready" });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Ingestion failed";
     console.error("[XAB] Knowledge ingest error:", message);
