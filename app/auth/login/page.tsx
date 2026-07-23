@@ -81,7 +81,6 @@ export default function LoginPage() {
                 <label className="text-[12px] font-medium text-white" htmlFor="password">
                   Password
                 </label>
-  // @ts-expect-error -- type safety suppressed for compatibility
                 <Link href={"/auth/forgot" as any} className="text-[11px] text-indigo-400 hover:text-indigo-300 transition-colors">
                   Forgot password?
                 </Link>
