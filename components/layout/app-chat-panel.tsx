@@ -13,7 +13,7 @@ export function AppChatPanel() {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-  const { messages, sendMessage, status } = useChat();
+  const { messages, append, status } = useChat();
 
   const isStreaming = status === "streaming" || status === "submitted";
 
@@ -21,23 +21,29 @@ export function AppChatPanel() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      sendMessage({ text: input.trim() });
-      setInput("");
+  const handleSend = async () => {
+    const content = input.trim();
+    if (!content || isStreaming) return;
+
+    setInput("");
+
+    try {
+      await append({ role: "user", content });
+    } catch (error) {
+      setInput(content);
+      console.error("Failed to send chat message", error);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      void handleSend();
     }
   };
 
   return (
     <div className="flex flex-col w-[380px] shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface-1)]">
-      {/* Chat Header */}
       <div className="flex items-center gap-2 px-3 py-3 border-b border-[var(--color-border)] shrink-0">
         <div className="flex items-center gap-2">
           <div className="p-1 rounded-md bg-indigo-500/15">
@@ -47,7 +53,6 @@ export function AppChatPanel() {
         </div>
       </div>
 
-      {/* Messages */}
       <ScrollArea className="flex-1 px-3 py-3">
         {messages.length === 0 ? (
           <div className="space-y-3 pt-2">
@@ -57,28 +62,23 @@ export function AppChatPanel() {
           <div className="space-y-4 pb-2">
             {messages.map((msg) => {
               const isUser = msg.role === "user";
-              
-              // Handle tool calls
               const toolCalls = msg.parts?.filter((p) => p.type === "tool-use") ?? [];
               const toolResults = msg.parts?.filter((p) => p.type === "tool-result") ?? [];
-              
-              // Handle text content
-              const textParts = msg.parts
-                ?.filter((p) => p.type === "text")
-                .map((p) => p.text ?? "")
-                .join("") ?? "";
+              const textParts =
+                msg.parts
+                  ?.filter((p) => p.type === "text")
+                  .map((p) => p.text ?? "")
+                  .join("") ?? "";
 
               if (!isUser) {
                 const hasCode = /```|~~~|import\s+|export\s+|const\s+\w+\s*=|function\s+\w+|className=|<[A-Z]\w+|return\s+|=>/.test(textParts);
                 if (hasCode && !textParts.trim()) return null;
               }
 
-              // Only render if there's text or tool calls/results
-              if (!textParts?.trim() && toolCalls.length === 0 && toolResults.length === 0) return null;
+              if (!textParts.trim() && toolCalls.length === 0 && toolResults.length === 0) return null;
 
               return (
                 <div key={msg.id} className="space-y-2">
-                  {/* Tool Calls */}
                   {toolCalls.map((tc: any, idx) => (
                     <div key={`tool-${msg.id}-${idx}`} className="flex gap-2.5">
                       <div className="w-6 h-6 rounded-md shrink-0 flex items-center justify-center text-[10px] font-bold border mt-0.5 bg-amber-500/20 border-amber-500/30">⚙</div>
@@ -91,20 +91,18 @@ export function AppChatPanel() {
                     </div>
                   ))}
 
-                  {/* Tool Results */}
                   {toolResults.map((tr: any, idx) => (
                     <div key={`result-${msg.id}-${idx}`} className="flex gap-2.5">
                       <div className="w-6 h-6 rounded-md shrink-0 flex items-center justify-center text-[10px] font-bold border mt-0.5 bg-green-500/20 border-green-500/30">✓</div>
                       <div className="flex-1 min-w-0">
                         <div className="rounded-lg px-3 py-2 text-[12px] leading-relaxed bg-green-500/10 border border-green-500/20 text-[var(--color-foreground)]">
-                          <div className="text-[11px]">{typeof tr.content === 'string' ? tr.content : JSON.stringify(tr.content).substring(0, 80)}</div>
+                          <div className="text-[11px]">{typeof tr.content === "string" ? tr.content : JSON.stringify(tr.content).substring(0, 80)}</div>
                         </div>
                       </div>
                     </div>
                   ))}
 
-                  {/* Text Response */}
-                  {textParts?.trim() && (
+                  {textParts.trim() && (
                     <div className={cn("flex gap-2.5", isUser && "flex-row-reverse")}>
                       <div
                         className={cn(
@@ -139,7 +137,6 @@ export function AppChatPanel() {
         )}
       </ScrollArea>
 
-      {/* Input */}
       <div className="border-t border-[var(--color-border)] bg-[var(--color-surface-1)] p-3 shrink-0">
         <div className="relative">
           <Textarea
@@ -158,12 +155,7 @@ export function AppChatPanel() {
                 <Loader2 className="w-3 h-3 animate-spin" />
               </Button>
             ) : (
-              <Button
-                size="sm"
-                onClick={handleSend}
-                disabled={!input.trim()}
-                className="h-7 gap-1 text-[11px]"
-              >
+              <Button size="sm" onClick={() => void handleSend()} disabled={!input.trim()} className="h-7 gap-1 text-[11px]">
                 <Send className="w-3 h-3" />
               </Button>
             )}
