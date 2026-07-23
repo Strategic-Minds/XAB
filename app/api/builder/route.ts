@@ -63,7 +63,8 @@ export async function POST(req: Request) {
   const templateId: string | undefined = body.templateId;
 
   const result = streamText({
-    model: openai(model) as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        model: openai(model) as any as any,
     system: buildSystemPrompt(templateId),
     messages: messages,
   });
