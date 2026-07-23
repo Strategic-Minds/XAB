@@ -51,7 +51,7 @@ async function scrapeUrl(url: string, extract?: string[]) {
   const h2s = [...html.matchAll(/<h2[^>]*>([^<]+)<\/h2>/gi)].map(m => m[1].trim()).slice(0, 5);
   const links = [...html.matchAll(/href=["']([^"']+)["']/gi)].map(m => m[1]).filter(l => l.startsWith('http')).slice(0, 20);
   const images = [...html.matchAll(/src=["']([^"']+\.(?:jpg|jpeg|png|webp|svg))["']/gi)].map(m => m[1]).slice(0, 10);
-  const text = html.replace(/<script[^>]*>.*?<\/script>/gis, '').replace(/<style[^>]*>.*?<\/style>/gis, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 5000);
+  const text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '').replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 5000);
 
   return { url, title, description, h1, h2s, links, images, text, status: res.status, timestamp: new Date().toISOString() };
 }
