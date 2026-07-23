@@ -37,7 +37,6 @@ export async function POST(
   try {
     const startTime = Date.now();
     const result = await generateText({
-  // @ts-expect-error -- type safety suppressed for compatibility
       model: openai(modelId) as any,
       system: systemPrompt,
       prompt: input,
