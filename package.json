@@ -81,5 +81,11 @@
     "typescript": "^5.8.3",
     "vitest": "^1.6.0"
   },
-  "description": "XAB \u2014 Xtreme Auto Builder"
+  "description": "XAB \u2014 Xtreme Auto Builder",
+  "overrides": {
+    "quill": "^2.0.3"
+  },
+  "resolutions": {
+    "quill": "^2.0.3"
+  }
 }
