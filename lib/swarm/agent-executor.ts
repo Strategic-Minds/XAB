@@ -236,7 +236,8 @@ export async function executeAgentTurn(
   const tools = buildAgentTools(agent as XabAgent);
 
   const result = streamText({
-    model: openai(agent.preferred_model || 'gpt-4o'),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        model: openai(agent.preferred_model || 'gpt-4o') as any,
     system: agent.system_prompt,
     messages,
     tools: Object.keys(tools).length > 0 ? tools : undefined,
