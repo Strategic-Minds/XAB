@@ -63,7 +63,6 @@ export async function POST(req: NextRequest) {
     const chunkInserts = [];
     for (let i = 0; i < chunks.length; i++) {
       const { embedding } = await embed({
-  // @ts-expect-error -- suppressed by repair loop
         model: gateway.textEmbeddingModel("openai/text-embedding-3-small"),
         value: chunks[i],
       });
