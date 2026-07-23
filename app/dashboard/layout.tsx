@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <AppChatPanel />
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        <Header displayName="User" initials="U" />
+        <Header />
         <main className="flex-1 overflow-auto p-6">
           {children}
         </main>
