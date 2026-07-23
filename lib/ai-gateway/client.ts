@@ -21,10 +21,20 @@ export interface ChatOptions {
   timeout_ms?: number
 }
 
+export interface EmbedOptions {
+  model?: string
+  timeout_ms?: number
+}
+
 interface ChatCompletionResponse {
   choices?: Array<{
     message?: { content?: string | null }
   }>
+  error?: { message?: string }
+}
+
+interface EmbeddingResponse {
+  data?: Array<{ embedding?: number[]; index?: number }>
   error?: { message?: string }
 }
 
@@ -38,7 +48,9 @@ const DEFAULT_MODELS: Record<ModelTask, string> = {
   content: process.env.AI_MODEL_CONTENT ?? 'openai/gpt-4.1-mini',
 }
 
-function resolveConfiguration(): { baseUrl: string; apiKey: string } {
+const DEFAULT_EMBEDDING_MODEL = process.env.AI_MODEL_EMBEDDING ?? 'openai/text-embedding-3-small'
+
+function resolveConfiguration(): { baseUrl: string; apiKey: string; usingGateway: boolean } {
   const gatewayKey = process.env.AI_GATEWAY_API_KEY ?? process.env.VERCEL_AI_GATEWAY_API_KEY
   const openAiKey = process.env.OPENAI_API_KEY
   const apiKey = gatewayKey ?? openAiKey
@@ -52,12 +64,29 @@ function resolveConfiguration(): { baseUrl: string; apiKey: string } {
     (gatewayKey ? 'https://ai-gateway.vercel.sh/v1' : 'https://api.openai.com/v1')
   ).replace(/\/$/, '')
 
-  return { baseUrl, apiKey }
+  return {
+    baseUrl,
+    apiKey,
+    usingGateway: baseUrl.includes('ai-gateway.vercel.sh') || Boolean(gatewayKey),
+  }
 }
 
 function normalizeModel(model: string, usingGateway: boolean): string {
   if (usingGateway) return model
   return model.startsWith('openai/') ? model.slice('openai/'.length) : model
+}
+
+function providerError(status: number, body: string): Error {
+  let providerMessage = body.slice(0, 300)
+
+  try {
+    const parsed = JSON.parse(body) as { error?: { message?: string } }
+    providerMessage = parsed.error?.message ?? providerMessage
+  } catch {
+    // Keep the bounded response excerpt. Never include request headers or credentials.
+  }
+
+  return new Error(`AI provider request failed with HTTP ${status}: ${providerMessage}`)
 }
 
 function validateMessages(messages: ChatMessage[]): void {
@@ -75,6 +104,21 @@ function validateMessages(messages: ChatMessage[]): void {
   }
 }
 
+function normalizeEmbeddingInput(input: string | string[]): string[] {
+  const values = Array.isArray(input) ? input : [input]
+  const normalized = values.map(value => typeof value === 'string' ? value.trim() : '')
+
+  if (normalized.length === 0 || normalized.some(value => value.length === 0)) {
+    throw new Error('Embedding input must contain one or more non-empty strings.')
+  }
+
+  if (normalized.length > 128) {
+    throw new Error('Embedding requests are limited to 128 inputs per call.')
+  }
+
+  return normalized
+}
+
 export function modelFor(task: ModelTask): string {
   return DEFAULT_MODELS[task] ?? DEFAULT_MODELS.chat
 }
@@ -85,8 +129,7 @@ async function createCompletionRequest(
   stream: boolean
 ): Promise<Response> {
   validateMessages(messages)
-  const { baseUrl, apiKey } = resolveConfiguration()
-  const usingGateway = baseUrl.includes('ai-gateway.vercel.sh') || Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_AI_GATEWAY_API_KEY)
+  const { baseUrl, apiKey, usingGateway } = resolveConfiguration()
   const model = normalizeModel(options.model ?? modelFor('chat'), usingGateway)
 
   const response = await fetch(`${baseUrl}/chat/completions`, {
@@ -106,17 +149,7 @@ async function createCompletionRequest(
   })
 
   if (!response.ok) {
-    const body = await response.text()
-    let providerMessage = body.slice(0, 300)
-
-    try {
-      const parsed = JSON.parse(body) as ChatCompletionResponse
-      providerMessage = parsed.error?.message ?? providerMessage
-    } catch {
-      // Keep the sanitized response excerpt.
-    }
-
-    throw new Error(`AI provider request failed with HTTP ${response.status}: ${providerMessage}`)
+    throw providerError(response.status, await response.text())
   }
 
   return response
@@ -186,4 +219,35 @@ export async function* chatStream(messages: ChatMessage[], options: ChatOptions 
       }
     }
   }
+}
+
+export async function embed(input: string | string[], options: EmbedOptions = {}): Promise<number[][]> {
+  const normalizedInput = normalizeEmbeddingInput(input)
+  const { baseUrl, apiKey, usingGateway } = resolveConfiguration()
+  const model = normalizeModel(options.model ?? DEFAULT_EMBEDDING_MODEL, usingGateway)
+
+  const response = await fetch(`${baseUrl}/embeddings`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ model, input: normalizedInput }),
+    signal: AbortSignal.timeout(options.timeout_ms ?? 60000),
+  })
+
+  if (!response.ok) {
+    throw providerError(response.status, await response.text())
+  }
+
+  const data = await response.json() as EmbeddingResponse
+  const vectors = (data.data ?? [])
+    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+    .map(item => item.embedding)
+
+  if (vectors.length !== normalizedInput.length || vectors.some(vector => !Array.isArray(vector) || vector.length === 0)) {
+    throw new Error('AI provider returned an incomplete embedding response.')
+  }
+
+  return vectors as number[][]
 }
