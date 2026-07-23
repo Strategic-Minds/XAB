@@ -59,7 +59,6 @@ export async function POST(
         : `Execute step: "${step.name}". Previous output: ${previousOutput}. Input: ${JSON.stringify(input)}. Be concise.`;
 
       const result = await generateText({
-  // @ts-expect-error -- type safety suppressed for compatibility
         model: openai("openai/gpt-4o-mini") as any,
         system: `You are executing a step in the workflow: "${workflow.name}". Be precise and concise.`,
         prompt: stepPrompt,
