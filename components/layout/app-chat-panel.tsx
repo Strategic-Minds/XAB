@@ -4,16 +4,13 @@ import * as React from "react";
 import { useChat } from "@ai-sdk/react";
 import { Send, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 export function AppChatPanel() {
-  const [input, setInput] = React.useState("");
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
-  const { messages, append, status } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, status } = useChat();
 
   const isStreaming = status === "streaming" || status === "submitted";
 
@@ -21,17 +18,10 @@ export function AppChatPanel() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
-    if (input.trim()) {
-      void append({ role: "user", content: input.trim() });
-      setInput("");
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      void handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
 
@@ -84,29 +74,30 @@ export function AppChatPanel() {
       </ScrollArea>
 
       <div className="border-t border-[var(--color-border)] bg-[var(--color-surface-1)] p-3 shrink-0">
-        <div className="relative">
-          <Textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask me anything..."
-            disabled={isStreaming}
-            className="resize-none rounded-lg border bg-[var(--color-surface-2)] p-2.5 text-[12px] placeholder-[var(--color-muted-foreground)] focus-visible:outline-none disabled:opacity-50"
-            rows={3}
-          />
-          <div className="absolute bottom-2 right-2">
-            {isStreaming ? (
-              <Button size="sm" variant="ghost" className="h-7 gap-1 text-[11px]" disabled>
-                <Loader2 className="w-3 h-3 animate-spin" />
-              </Button>
-            ) : (
-              <Button size="sm" onClick={handleSend} disabled={!input.trim()} className="h-7 gap-1 text-[11px]">
-                <Send className="w-3 h-3" />
-              </Button>
-            )}
+        <form onSubmit={handleSubmit}>
+          <div className="relative">
+            <textarea
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask me anything..."
+              disabled={isStreaming}
+              className="w-full resize-none rounded-lg border bg-[var(--color-surface-2)] p-2.5 pr-10 text-[12px] placeholder-[var(--color-muted-foreground)] focus:outline-none disabled:opacity-50 text-[var(--color-foreground)]"
+              rows={3}
+            />
+            <div className="absolute bottom-2 right-2">
+              {isStreaming ? (
+                <Button size="sm" variant="ghost" className="h-7 gap-1 text-[11px]" disabled type="button">
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                </Button>
+              ) : (
+                <Button size="sm" disabled={!input.trim()} className="h-7 gap-1 text-[11px]" type="submit">
+                  <Send className="w-3 h-3" />
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
