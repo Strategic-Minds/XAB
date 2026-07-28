@@ -9,9 +9,19 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     service: 'XAB Unified Autonomous Factory',
-    schemaVersion: '1.0.0',
+    schemaVersion: '1.1.0',
     mode: 'preview_only',
     dispatchEnabled: false,
+    primaryOperatingMcp: {
+      name: 'Xtreme AI Builder MCP',
+      namespace: 'Xtreme_AI_Builder',
+      pluginId: 'dev-6a633e9ec62c8191aec60a9799309021',
+      connectorState: 'namespace_recognized_tool_schema_not_exposed',
+    },
+    compatibilityExecutor: {
+      name: 'AUTO BUILDER 2 MCP',
+      authority: 'subordinate',
+    },
     qualityTargets: {
       visualParityEachBreakpoint: 99,
       operationalParity: 100,
@@ -19,10 +29,10 @@ export async function GET() {
       maxRepairIterations: 5,
     },
     authorityChain: [
-      'XAB',
+      'Operator',
       'GPT Business',
+      'Xtreme AI Builder MCP',
       'Base44 APEX',
-      'AUTO BUILDER 2 MCP',
       'UACS Sandbox',
       'BrowserWorker',
       'Operator Release Gate',
@@ -58,9 +68,10 @@ export async function POST(request: Request) {
     ok: true,
     status: parsed.data.execute ? 'APPROVAL_GATED_HANDOFF_READY' : 'DRY_RUN_PACKET_READY',
     dispatchEnabled: false,
+    primaryOperatingMcp: 'Xtreme AI Builder MCP',
     packet,
     mcpHandoff,
     executionNote:
-      'This endpoint creates the canonical packet and AUTO BUILDER MCP handoff. A separately validated MCP transport adapter must submit it; production and protected actions remain blocked.',
+      'This endpoint creates the canonical Xtreme AI Builder MCP work packet. Dispatch stays disabled until the Xtreme_AI_Builder connector exposes and passes its callable tool contract. AUTO BUILDER 2 is subordinate compatibility execution only; production and protected actions remain blocked.',
   });
 }
