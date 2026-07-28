@@ -12,27 +12,24 @@ async function checkDatabase(): Promise<HealthCheck> {
       process.env.SUPABASE_URL ?? '',
       process.env.SUPABASE_SERVICE_ROLE_KEY ?? ''
     )
-    // Try receipt_registry first; fall back to any accessible table
     const { error } = await supabase.from('receipt_registry').select('id').limit(1)
     if (!error) {
       return { name: 'database', status: 'healthy', latency_ms: Date.now() - t }
     }
-    // Table may not exist yet — check if Supabase itself is reachable
-    const { error: pingError } = await supabase.rpc('now').single()
-    if (!pingError) {
+    // Distinguish: table missing vs DB unreachable
+    const msg = error.message ?? ''
+    const tableMissing = msg.includes('does not exist') ||
+                         msg.includes('schema cache') ||
+                         msg.includes('not found')
+    if (tableMissing) {
       return {
         name: 'database',
         status: 'degraded',
         latency_ms: Date.now() - t,
-        message: 'receipt_registry not yet migrated — DB reachable',
+        message: 'receipt_registry pending migration — DB reachable',
       }
     }
-    return {
-      name: 'database',
-      status: 'unhealthy',
-      latency_ms: Date.now() - t,
-      message: error.message,
-    }
+    return { name: 'database', status: 'unhealthy', latency_ms: Date.now() - t, message: msg }
   } catch (e) {
     return { name: 'database', status: 'unhealthy', latency_ms: Date.now() - t, message: String(e) }
   }
