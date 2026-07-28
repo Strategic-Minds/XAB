@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "system_id": "XAB-UNIFIED-AUTONOMOUS-FACTORY",
+  "operator": "Jeremy Bensen",
+  "primary_command_surface": {
+    "name": "Xtreme AI Builder",
+    "repo": "Strategic-Minds/XAB",
+    "base44_app_id": "6a4ae522852a5e08bfa42450",
+    "vercel_project_id": "prj_1jmQQXTLAMNCsJzTSzTsDnsg0hWX",
+    "role": "operator command center, intake, approvals, status, evidence and release decisions"
+  },
+  "execution_bus": {
+    "name": "AUTO BUILDER 2 MCP",
+    "vercel_project_id": "prj_qaUnGOL4MmPvm11Hqxp9Cn0YDfmv",
+    "endpoint": "https://auto-builder-livid.vercel.app/api/mcp",
+    "role": "governed tool invocation, provisioning, job routing, receipts and rollback"
+  },
+  "build_protocol": {
+    "name": "UACS",
+    "repo": "Strategic-Minds/UNIVERSAL-AUTONOMOUS-CODING-SYSTEM",
+    "sandbox_repo": "Strategic-Minds/UNIVERSAL-AUTONOMOUS-CODING-SYSTEM-SANDBOX",
+    "sandbox_vercel_project_id": "prj_RE8lepQbj636rsHdJGO29KS0Pbao",
+    "role": "repeatable build lifecycle, templates, sandbox-first execution and promotion protocol"
+  },
+  "orchestrator": {
+    "name": "Base44 APEX",
+    "app_id": "6a4ae522852a5e08bfa42450",
+    "role": "queues, registries, work packets, provisioning, coding coordination, repair routing and persistent state"
+  },
+  "creative_validation_intelligence": {
+    "name": "GPT Business",
+    "role": "discovery, research, specifications, exactly three brand packs, exactly three web packs, copy, visual references, critique, parity review and operator collaboration"
+  },
+  "browser_qa": {
+    "name": "BrowserWorker",
+    "repo": "Strategic-Minds/BROWSERWORKER",
+    "vercel_project_id": "prj_XLXGylKrFpIGK7GVGpeSfWwV7qzo",
+    "mandatory": true,
+    "role": "desktop, tablet and mobile screenshots, E2E, forms, routes, APIs, auth, PWA, console, network, accessibility and runtime evidence"
+  },
+  "durable_sources": {
+    "business_source_truth": "Google Drive XTREME-AI-SYSTEMS",
+    "code_source_truth": "GitHub feature branches and draft pull requests",
+    "runtime_source_truth": "Vercel preview deployments and logs",
+    "state_source_truth": "Supabase canonical project plus Base44 registries",
+    "receipt_source_truth": "Drive receipts, Base44 ReceiptRegistry, GitHub evidence and Supabase receipt ledger"
+  },
+  "supporting_projects": {
+    "factory_control_plane": "prj_XCNftWPDtJvJYrPikqrL0AvPUJJy",
+    "factory_runtime": "prj_0uBAzxZGN1zzqMlTOPxDsWTt65lX",
+    "parity_engine": "prj_zBXhS69wVcNyJ8fdM74cgsaQZ13B",
+    "template_registry": "prj_cGxTA6b52tEovoWZs2MXeXliff3u",
+    "platform_config": "prj_C5SolRHzJiN43ZhuS59aUsHJmxeN",
+    "image_pipeline": "prj_znq19csTVa7gydBsMsyVT8MGO7RD",
+    "prompt_library": "prj_BOjTjYqvkpUMxD9EvnyW7uAvG8iz",
+    "seo_engine": "prj_3mQFZYHkskNWrZsRXsrS558URnKw",
+    "website_templates": "prj_Q6ya83KwTIiqQ6B0DO8qX9zhHtHa"
+  },
+  "protected_actions": [
+    "production_deploy",
+    "merge_protected_branch",
+    "production_database_migration",
+    "secret_or_environment_mutation",
+    "domain_or_dns_change",
+    "paid_resource_creation",
+    "customer_message",
+    "live_social_publish",
+    "destructive_action"
+  ],
+  "default_policy": "sandbox, feature branch, draft pull request, preview deployment, complete receipts, no automatic production promotion"
+}
