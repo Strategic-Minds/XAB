@@ -31,9 +31,11 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ok: true,
     status: parsed.data.execute ? 'APPROVAL_GATED_HANDOFF_READY' : 'DRY_RUN_PACKET_READY',
+    dispatchEnabled: false,
+    primaryOperatingMcp: 'Xtreme AI Builder MCP',
     packet,
     mcpHandoff,
     executionNote:
-      'This endpoint creates the canonical packet and AUTO BUILDER MCP handoff. A separately validated MCP transport adapter must submit the handoff; production and protected actions remain blocked.',
+      'This endpoint creates the canonical Xtreme AI Builder MCP work packet. Dispatch stays disabled until the Xtreme_AI_Builder connector exposes and passes its callable tool contract. AUTO BUILDER 2 is subordinate compatibility execution only; production and protected actions remain blocked.',
   });
 }
