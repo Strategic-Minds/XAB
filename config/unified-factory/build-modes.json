@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "modes": {
+    "mvp": {
+      "purpose": "Smallest complete solution for the approved scope",
+      "scope_rule": "Reduce features, never reduce correctness for applicable features",
+      "required_outputs": ["approved brief", "brand pack", "web pack", "working application", "preview", "receipts", "rollback reference"],
+      "visual_parity_minimum": 99,
+      "operational_parity_required": 100,
+      "browserworker_required": true,
+      "production_release": "operator_gated"
+    },
+    "production": {
+      "purpose": "Secure, observable and maintainable live system",
+      "required_outputs": ["complete specification", "approved brand and web pack", "frontend", "backend", "database", "RLS", "auth", "tests", "monitoring", "preview", "runbooks", "receipts", "rollback proof"],
+      "visual_parity_minimum": 99,
+      "operational_parity_required": 100,
+      "browserworker_required": true,
+      "production_release": "operator_gated"
+    },
+    "enterprise": {
+      "purpose": "FAANG-grade governed system with resilience, auditability and scale controls",
+      "required_outputs": ["architecture decision records", "threat model", "multi-environment strategy", "RLS and data classification", "queue and dead-letter handling", "idempotency", "rate limits", "observability", "SLOs", "load tests", "disaster recovery", "accessibility", "security scans", "preview evidence", "rollback execution proof", "complete receipts"],
+      "visual_parity_minimum": 99,
+      "operational_parity_required": 100,
+      "browserworker_required": true,
+      "production_release": "operator_gated"
+    }
+  },
+  "universal_rule": "The requested mode changes breadth and hardening depth. It never permits broken applicable functionality, missing evidence, or automatic production release."
+}
