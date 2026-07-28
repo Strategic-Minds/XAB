@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_id": "receipt_1785219553486",
+  "job_id": "XAB-UAF-THREE-AGENT-PROOF-20260728-001",
+  "project_id": "XAB-UAF-PROOF-001",
+  "recorded_at": "2026-07-28T06:19:13.486Z",
+  "mode": "dry_run",
+  "status": "PASS_WITH_WARNINGS",
+  "operator": "Jeremy Bensen",
+  "primary_authority": {
+    "name": "Xtreme AI Builder MCP Governor",
+    "namespace": "Xtreme_AI_Builder",
+    "base44_app_id": "6a4ae522852a5e08bfa42450",
+    "agent_registry_id": "6a683ce4b2fa06d6eab30207"
+  },
+  "agent_team": [
+    {
+      "name": "Xtreme AI Builder MCP Governor",
+      "base44_app_id": "6a4ae522852a5e08bfa42450",
+      "registry_id": "6a683ce4b2fa06d6eab30207",
+      "role": "primary governed command authority"
+    },
+    {
+      "name": "Base44 APEX Build Orchestrator",
+      "base44_app_id": "6a4ae522852a5e08bfa42450",
+      "registry_id": "6a683ce4b2fa06d6eab30208",
+      "role": "implementation, queues, repair and hardening coordinator"
+    },
+    {
+      "name": "XPS Domain Intelligence Agent",
+      "base44_app_id": "69db047707a15d69135e3de9",
+      "registry_id": "6a683ce4b2fa06d6eab30209",
+      "role": "XPS, contractor, bidding, takeoff, proposal, CRM and flooring-domain specialist"
+    }
+  ],
+  "xps_bridge": {
+    "gateway_worker_id": "6a683cfb6cdaecef0c483d7a",
+    "domain_worker_id": "6a683cfb6cdaecef0c483d7b",
+    "authority_settings_written": true,
+    "execution_receipt_id": "XPS-AGENT-BRIDGE-SETUP-20260728-001"
+  },
+  "evidence": {
+    "github_pr": "https://github.com/Strategic-Minds/XAB/pull/9",
+    "github_head_before_receipt": "43f4f2039f2bc6a321d6e8e2fd4f44b8984dbfab",
+    "vercel_deployment_id": "dpl_4YAa7PfgVyx514pynxN9hKTJF4zq",
+    "preview_url": "https://xab-system-deq2synrs-strategic-minds-advisory.vercel.app",
+    "preview_route": "/api/factory/unified",
+    "preview_http_status": 200,
+    "preview_schema_version": "1.2.0",
+    "production_mutation": false,
+    "base44_validation_pass_id": "XAB-UAF-THREE-AGENT-REGISTRY-20260728",
+    "base44_validation_blocked_id": "XAB-UAF-XTREME-MCP-PROVIDER-ADAPTER-20260728"
+  },
+  "dry_run_result": {
+    "status": "dry_run_complete",
+    "provider": "xtreme ai builder mcp",
+    "routed_to": "manual_receipt",
+    "provider_adapter_installed": false,
+    "receipt_planned": true,
+    "rollback_metadata_planned": true
+  },
+  "passed_checks": [
+    "three control-plane AgentRegistry records are active",
+    "reciprocal XPS Agent gateway and domain workers exist",
+    "XPS authority SystemSettings records exist",
+    "XAB authority map contains the three-agent team",
+    "Vercel branch preview is READY",
+    "preview API reports Xtreme AI Builder MCP as primary authority",
+    "protected actions remain blocked",
+    "production mutation is false"
+  ],
+  "blockers": [
+    "Xtreme AI Builder MCP provider-specific adapter is not installed in the deployed universal runner",
+    "XAB server-side subordinate executor URL and bridge credential are not configured",
+    "BrowserWorker Chromium runtime is unavailable in the last verified environment",
+    "canonical XAB/UACS Supabase project connection is unresolved",
+    "full 99 percent visual and 100 percent operational proof has not run against an approved reference"
+  ],
+  "rollback": {
+    "available": true,
+    "strategy": "Deactivate the three new AgentRegistry records and reciprocal XPS Agent workers, remove the four XPS authority SystemSettings records, revert the XAB branch commits, preserve receipts, and leave production unchanged."
+  },
+  "protected_actions_not_performed": [
+    "production_deploy",
+    "merge_protected_branch",
+    "production_database_migration",
+    "secret_or_environment_mutation",
+    "domain_or_dns_change",
+    "paid_resource_creation",
+    "customer_message",
+    "live_social_publish",
+    "destructive_action"
+  ]
+}
