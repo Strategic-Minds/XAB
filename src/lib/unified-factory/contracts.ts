@@ -28,13 +28,35 @@ export const UnifiedBuildRequestSchema = z.object({
   targetUsers: z.array(z.string().min(1)).default([]),
   requiredCapabilities: z.array(z.string().min(1)).default([]),
   integrations: z.array(z.string().min(1)).default([]),
-  approvedBrandRef: z.string().url().optional(),
-  approvedVisualRefs: z.array(z.string().url()).default([]),
+  approvedIdeaRef: z.string().min(1).optional(),
+  approvedLogoRef: z.string().min(1).optional(),
+  approvedBrandRef: z.string().min(1).optional(),
+  approvedVisualRefs: z.array(z.string().min(1)).default([]),
+  approvedWorkflowRef: z.string().min(1).optional(),
+  approvalManifestSha256: z.string().regex(/^[a-f0-9]{64}$/).optional(),
   existingRepo: z.string().optional(),
   sourceTruthRefs: z.array(z.string().min(1)).default([]),
   constraints: z.array(z.string().min(1)).default([]),
   requestedBy: z.string().default('Jeremy Bensen'),
   execute: z.boolean().default(false),
+}).superRefine((request, context) => {
+  if (!request.execute) return;
+  const required = [
+    ['approvedIdeaRef', request.approvedIdeaRef],
+    ['approvedLogoRef', request.approvedLogoRef],
+    ['approvedBrandRef', request.approvedBrandRef],
+    ['approvedWorkflowRef', request.approvedWorkflowRef],
+    ['approvalManifestSha256', request.approvalManifestSha256],
+  ] as const;
+  for (const [field, value] of required) {
+    if (!value) context.addIssue({ code: z.ZodIssueCode.custom, path: [field], message: `${field} is required when execute=true` });
+  }
+  if (request.approvedVisualRefs.length === 0) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['approvedVisualRefs'], message: 'At least one approved visual reference is required when execute=true' });
+  }
+  if (request.sourceTruthRefs.length === 0) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ['sourceTruthRefs'], message: 'At least one source-truth reference is required when execute=true' });
+  }
 });
 
 export type UnifiedBuildRequest = z.infer<typeof UnifiedBuildRequestSchema>;
