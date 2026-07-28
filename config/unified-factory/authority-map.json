@@ -1,11 +1,11 @@
 {
-  "schema_version": "1.1.0",
+  "schema_version": "1.2.0",
   "system_id": "XAB-UNIFIED-AUTONOMOUS-FACTORY",
   "operator": "Jeremy Bensen",
   "operator_decision": {
-    "decision": "Xtreme AI Builder MCP is the primary MCP that operates the unified autonomous factory.",
+    "decision": "Xtreme AI Builder MCP is the primary MCP that operates the unified autonomous factory, supported by Base44 APEX and the separate XPS Agent app as a three-agent Base44 team.",
     "effective_at": "2026-07-28",
-    "supersedes": "AUTO BUILDER 2 MCP as primary execution bus"
+    "supersedes": "AUTO BUILDER 2 MCP as primary execution bus and any design where XPS Agent acts as an independent command authority"
   },
   "primary_command_surface": {
     "name": "Xtreme AI Builder",
@@ -22,6 +22,33 @@
     "authority": "all autonomous factory jobs must enter through this MCP unless the operator explicitly authorizes an emergency fallback",
     "current_connector_state": "namespace recognized; callable tool schema not exposed in the current session"
   },
+  "base44_agent_team": [
+    {
+      "name": "Xtreme AI Builder MCP Governor",
+      "agent_registry_id": "6a683ce4b2fa06d6eab30207",
+      "base44_app_id": "6a4ae522852a5e08bfa42450",
+      "role": "primary command authority, governed work-packet creation, routing, approvals, receipts and rollback coordination"
+    },
+    {
+      "name": "Base44 APEX Build Orchestrator",
+      "agent_registry_id": "6a683ce4b2fa06d6eab30208",
+      "base44_app_id": "6a4ae522852a5e08bfa42450",
+      "role": "implementation coordination, registries, queues, provisioning, coding, retries, repair and hardening"
+    },
+    {
+      "name": "XPS Domain Intelligence Agent",
+      "agent_registry_id": "6a683ce4b2fa06d6eab30209",
+      "base44_app_id": "69db047707a15d69135e3de9",
+      "role": "XPS, National Concrete Polishing, National Epoxy Pros, contractor intelligence, bidding, takeoff, proposals, flooring systems, leads, CRM and field-operational validation"
+    }
+  ],
+  "xps_agent_bridge": {
+    "app_name": "XPS Agent",
+    "app_id": "69db047707a15d69135e3de9",
+    "gateway_worker_id": "6a683cfb6cdaecef0c483d7a",
+    "domain_worker_id": "6a683cfb6cdaecef0c483d7b",
+    "rule": "XPS Agent receives governed work packets from Xtreme AI Builder MCP, routes XPS-domain work to local APEX workers, and returns durable receipts. It may not originate protected actions or override the global factory authority."
+  },
   "compatibility_execution_layer": {
     "name": "AUTO BUILDER 2 MCP",
     "vercel_project_id": "prj_qaUnGOL4MmPvm11Hqxp9Cn0YDfmv",
@@ -35,11 +62,6 @@
     "sandbox_repo": "Strategic-Minds/UNIVERSAL-AUTONOMOUS-CODING-SYSTEM-SANDBOX",
     "sandbox_vercel_project_id": "prj_RE8lepQbj636rsHdJGO29KS0Pbao",
     "role": "repeatable build lifecycle, templates, sandbox-first execution and promotion protocol"
-  },
-  "orchestrator": {
-    "name": "Base44 APEX",
-    "app_id": "6a4ae522852a5e08bfa42450",
-    "role": "queues, registries, work packets, provisioning, coding coordination, repair routing and persistent state under Xtreme AI Builder MCP governance"
   },
   "creative_validation_intelligence": {
     "name": "GPT Business",
@@ -81,5 +103,5 @@
     "live_social_publish",
     "destructive_action"
   ],
-  "default_policy": "Xtreme AI Builder MCP intake, sandbox, feature branch, draft pull request, preview deployment, complete receipts, no automatic production promotion"
+  "default_policy": "Xtreme AI Builder MCP intake, three-agent Base44 routing, sandbox, feature branch, draft pull request, preview deployment, complete receipts, no automatic production promotion"
 }
