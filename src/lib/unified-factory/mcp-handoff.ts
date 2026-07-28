@@ -1,6 +1,15 @@
 import type { UnifiedBuildPacket } from './contracts';
 
-export interface AutoBuilderMcpHandoff {
+export interface XtremeAiBuilderMcpHandoff {
+  primary_mcp: {
+    name: 'Xtreme AI Builder MCP';
+    namespace: 'Xtreme_AI_Builder';
+    plugin_id: 'dev-6a633e9ec62c8191aec60a9799309021';
+  };
+  compatibility_executor: {
+    name: 'AUTO BUILDER 2 MCP';
+    authority: 'subordinate';
+  };
   tool: 'run_universal_job';
   arguments: {
     job_id: string;
@@ -20,8 +29,17 @@ export interface AutoBuilderMcpHandoff {
   };
 }
 
-export function createMcpHandoff(packet: UnifiedBuildPacket): AutoBuilderMcpHandoff {
+export function createMcpHandoff(packet: UnifiedBuildPacket): XtremeAiBuilderMcpHandoff {
   return {
+    primary_mcp: {
+      name: 'Xtreme AI Builder MCP',
+      namespace: 'Xtreme_AI_Builder',
+      plugin_id: 'dev-6a633e9ec62c8191aec60a9799309021',
+    },
+    compatibility_executor: {
+      name: 'AUTO BUILDER 2 MCP',
+      authority: 'subordinate',
+    },
     tool: 'run_universal_job',
     arguments: {
       job_id: `${packet.projectId}:${packet.correlationId}`,
