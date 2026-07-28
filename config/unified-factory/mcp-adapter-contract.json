@@ -1,13 +1,28 @@
 {
-  "schema_version": "1.0.0",
-  "adapter_id": "xab_unified_autonomous_factory",
+  "schema_version": "1.1.0",
+  "adapter_id": "xtreme_ai_builder_unified_autonomous_factory",
+  "primary_mcp": {
+    "name": "Xtreme AI Builder MCP",
+    "namespace": "Xtreme_AI_Builder",
+    "plugin_id": "dev-6a633e9ec62c8191aec60a9799309021",
+    "authority": "primary",
+    "current_connector_state": "namespace recognized; callable tool schema not exposed in the current session"
+  },
   "matches": [
+    "Xtreme AI Builder",
+    "Xtreme AI Builder MCP",
+    "Xtreme_AI_Builder",
     "XAB Unified Autonomous Factory",
     "xab_unified_autonomous_factory",
     "XAB-UAF"
   ],
   "entry_tool": "run_universal_job",
   "default_mode": "dry_run",
+  "compatibility_executor": {
+    "name": "AUTO BUILDER 2 MCP",
+    "authority": "subordinate",
+    "use_rule": "May execute provider-specific work only when invoked through an Xtreme AI Builder MCP work packet or an explicit operator-authorized emergency fallback."
+  },
   "provider_routes": [
     {
       "lane": "rehydrate_source_truth",
@@ -94,6 +109,7 @@
     "destructive_action"
   ],
   "validation_rules": {
+    "request_not_originated_or_adopted_by_xtreme_ai_builder_mcp": "reject",
     "unknown_lane": "fail",
     "missing_receipt_destination": "fail",
     "missing_rollback_metadata": "fail",
@@ -101,6 +117,6 @@
     "provider_adapter_unavailable": "fallback_and_block_promotion",
     "production_request_without_exact_approval": "reject"
   },
-  "installation_target": "AUTO BUILDER 2 MCP universal runner provider registry",
-  "current_status": "spec_ready_not_installed_in_mcp_runtime"
+  "installation_target": "Xtreme_AI_Builder plugin provider registry",
+  "current_status": "authority_bound_tool_surface_not_exposed"
 }
