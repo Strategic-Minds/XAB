@@ -86,10 +86,8 @@
     "axe-core": "^4.9.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^15.3.3",
-    "postcss": "latest",
-    "tailwindcss": "latest",
     "typescript": "^5.8.3",
-    "vitest": "^2.3.0"
+    "vitest": "2.1.8"
   },
   "description": "XAB \u2014 Xtreme Auto Builder",
   "overrides": {
