@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getUserIdentifier } from '@/lib/security/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -6,6 +7,10 @@ export const dynamic = 'force-dynamic';
 const XAB_VERSION = '1.0.0';
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+
+// MCP-specific rate limit: 30 req/min per IP (prevent scraping/abuse)
+const MCP_RATE_LIMIT = 30;
+const MCP_RATE_WINDOW = 60 * 1000;
 
 async function sb(table: string, method = 'GET', body?: unknown, params = '') {
   if (!SUPABASE_URL || !SUPABASE_KEY) return { error: 'Supabase not configured' };
@@ -103,6 +108,16 @@ export async function POST(
   req: NextRequest,
   context: { params: Promise<{ transport: string }> }
 ) {
+  // Rate limit MCP endpoint — 30 req/min per IP
+  const identifier = getUserIdentifier(req);
+  const rl = checkRateLimit(identifier, MCP_RATE_LIMIT, MCP_RATE_WINDOW);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { jsonrpc: '2.0', id: null, error: { code: -32029, message: 'Rate limit exceeded. Retry after ' + Math.ceil((rl.resetAt - Date.now()) / 1000) + 's.' } },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    );
+  }
+
   const { transport } = await context.params;
   const body = await req.json().catch(() => ({}));
   const { method, id, params: rpcParams } = body;
