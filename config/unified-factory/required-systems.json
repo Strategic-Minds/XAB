@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "required_core": [
+    {"system":"XAB","status":"present","purpose":"command center and operator approvals"},
+    {"system":"AUTO BUILDER 2 MCP","status":"present_partial","purpose":"execution bus and governed tool invocation"},
+    {"system":"UACS","status":"present","purpose":"universal build protocol and reusable templates"},
+    {"system":"UACS Sandbox","status":"present_unvalidated","purpose":"isolated autonomous experimentation and promotion candidates"},
+    {"system":"Base44 APEX","status":"present_partial","purpose":"orchestration, registries, queues and provisioning"},
+    {"system":"GPT Business","status":"present","purpose":"strategy, brand, visual direction and validation intelligence"},
+    {"system":"BrowserWorker","status":"present_unvalidated_for_unified_factory","purpose":"mandatory browser and operational evidence"},
+    {"system":"Google Drive","status":"connected","purpose":"business source truth and evidence archive"},
+    {"system":"GitHub","status":"connected","purpose":"code source truth, feature branches and draft PRs"},
+    {"system":"Vercel","status":"connected","purpose":"preview runtime, workflows, logs, cron and release"},
+    {"system":"Supabase","status":"blocked_wrong_visible_project","purpose":"canonical state, queues, RLS, auth, storage and receipt ledger"}
+  ],
+  "required_install_or_activation": [
+    {"system":"Correct Supabase organization/project connection","priority":"P0","reason":"Current connector only exposes azajysheebfhyzoyplpf while UACS references prhppuuwcnmfdhwsagug","action":"Connect the owning Supabase account, then create a development branch or dedicated sandbox after cost approval"},
+    {"system":"Base44 Slack or Slack Bot OAuth","priority":"P0","reason":"Needed for approvals, escalation and completion receipts","action":"Complete OAuth; external messages remain approval-gated"},
+    {"system":"BrowserWorker sandbox credentials","priority":"P0","reason":"Required to execute authenticated validation jobs","action":"Install sandbox-only secret through approved secret management"},
+    {"system":"Vercel AI Gateway configuration","priority":"P0","reason":"XAB code contains an AI Gateway client but runtime configuration is not verified","action":"Verify provider route, budgets, fallbacks and cost receipts"},
+    {"system":"Five-minute Vercel Workflow heartbeat","priority":"P0","reason":"Required for queue polling, stuck-job detection, validation and repair routing","action":"Deploy preview-only heartbeat and prove idempotency"},
+    {"system":"Parity Engine to BrowserWorker adapter","priority":"P0","reason":"Vercel parity-engine project exists but end-to-end screenshot comparison is not verified","action":"Define signed input/output contract and run a three-breakpoint proof"},
+    {"system":"Sentry runtime project","priority":"P1","reason":"XAB includes Sentry dependency but configuration is not verified","action":"Create or connect project, preview environment first"},
+    {"system":"OpenTelemetry collector/export destination","priority":"P1","reason":"XAB includes OpenTelemetry libraries but trace export is not verified","action":"Configure preview traces and correlation IDs"},
+    {"system":"GitHub CodeQL, dependency and secret scanning","priority":"P1","reason":"Required enterprise security evidence","action":"Enable branch-safe workflows and block promotion on critical findings"},
+    {"system":"Google Docs, Slides and Forms Base44 connectors","priority":"P2","reason":"Needed for autonomous specifications, presentations, intake and approval packets","action":"Connect only the scopes required for project generation"},
+    {"system":"Google Analytics and Search Console Base44 connectors","priority":"P2","reason":"Needed for post-launch SEO and performance learning loops","action":"Connect for production systems when domains exist"}
+  ],
+  "do_not_add_yet": [
+    {"system":"additional dashboard platforms","reason":"XAB and Base44 already provide control surfaces"},
+    {"system":"additional workflow orchestrators","reason":"Use AUTO BUILDER MCP and Vercel Workflow first; add n8n only for an external integration that cannot be handled reliably"},
+    {"system":"additional databases","reason":"Resolve the canonical Supabase boundary before expanding storage"}
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.1.0",
+  "adapter_id": "xtreme_ai_builder_unified_autonomous_factory",
+  "primary_mcp": {
+    "name": "Xtreme AI Builder MCP",
+    "namespace": "Xtreme_AI_Builder",
+    "plugin_id": "dev-6a633e9ec62c8191aec60a9799309021",
+    "authority": "primary",
+    "current_connector_state": "namespace recognized; callable tool schema not exposed in the current session"
+  },
+  "matches": [
+    "Xtreme AI Builder",
+    "Xtreme AI Builder MCP",
+    "Xtreme_AI_Builder",
+    "XAB Unified Autonomous Factory",
+    "xab_unified_autonomous_factory",
+    "XAB-UAF"
+  ],
+  "entry_tool": "run_universal_job",
+  "default_mode": "dry_run",
+  "compatibility_executor": {
+    "name": "AUTO BUILDER 2 MCP",
+    "authority": "subordinate",
+    "use_rule": "May execute provider-specific work only when invoked through an Xtreme AI Builder MCP work packet or an explicit operator-authorized emergency fallback."
+  },
+  "provider_routes": [
+    {
+      "lane": "rehydrate_source_truth",
+      "tool": "source_truth_discovery",
+      "fallback": "manual_receipt"
+    },
+    {
+      "lane": "register_base44_project",
+      "tool": "base44_registry_projection",
+      "fallback": "base44_handoff_packet"
+    },
+    {
+      "lane": "create_drive_project_structure",
+      "tool": "run_drive_job",
+      "fallback": "drive_handoff_packet"
+    },
+    {
+      "lane": "create_or_prepare_github_branch_or_repo",
+      "tool": "run_platform_provisioning_job",
+      "provider": "github",
+      "fallback": "github_patch_packet"
+    },
+    {
+      "lane": "create_vercel_preview_or_sandbox",
+      "tool": "run_platform_provisioning_job",
+      "provider": "vercel",
+      "fallback": "vercel_handoff_packet"
+    },
+    {
+      "lane": "prepare_supabase_development_boundary",
+      "tool": "supabase_development_branch",
+      "fallback": "sql_draft_only"
+    },
+    {
+      "lane": "route_uacs_build_packets",
+      "tool": "run_job",
+      "target_system": "UACS Sandbox",
+      "fallback": "branch_safe_build_packet"
+    },
+    {
+      "lane": "run_browserworker_validation",
+      "tool": "run_browser_job",
+      "fallback": "browserworker_queue_receipt"
+    },
+    {
+      "lane": "run_recursive_repair_loop",
+      "tool": "run_job",
+      "target_system": "XAB Repair Router",
+      "fallback": "repair_handoff_packet"
+    },
+    {
+      "lane": "create_draft_promotion_pr",
+      "tool": "run_platform_provisioning_job",
+      "provider": "github",
+      "fallback": "draft_pr_handoff"
+    },
+    {
+      "lane": "write_sync_and_validation_receipts",
+      "tool": "drive_write_receipt",
+      "fallback": "manual_receipt"
+    }
+  ],
+  "required_envelope_fields": [
+    "job_id",
+    "project_id",
+    "correlation_id",
+    "mode",
+    "actions",
+    "blocked_actions",
+    "approval_required",
+    "receipt",
+    "rollback",
+    "payload"
+  ],
+  "hard_blocks": [
+    "production_deploy",
+    "merge_protected_branch",
+    "production_database_migration",
+    "secret_or_environment_mutation",
+    "domain_or_dns_change",
+    "paid_resource_creation",
+    "customer_message",
+    "live_social_publish",
+    "destructive_action"
+  ],
+  "validation_rules": {
+    "request_not_originated_or_adopted_by_xtreme_ai_builder_mcp": "reject",
+    "unknown_lane": "fail",
+    "missing_receipt_destination": "fail",
+    "missing_rollback_metadata": "fail",
+    "missing_browserworker_evidence": "fail",
+    "provider_adapter_unavailable": "fallback_and_block_promotion",
+    "production_request_without_exact_approval": "reject"
+  },
+  "installation_target": "Xtreme_AI_Builder plugin provider registry",
+  "current_status": "authority_bound_tool_surface_not_exposed"
+}

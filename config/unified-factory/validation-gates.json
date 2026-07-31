@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "promotion_status_default": "blocked",
+  "repair_iterations_max": 5,
+  "visual": {
+    "minimum_score_each_breakpoint": 99,
+    "breakpoints": ["desktop", "tablet", "mobile"],
+    "required_states": ["default", "loading", "empty", "error", "success", "navigation_open", "modal_open", "form_invalid", "form_success"],
+    "required_evidence": ["approved_reference", "browserworker_screenshot", "diff_artifact", "parity_score", "defect_list"],
+    "missing_evidence_result": "fail"
+  },
+  "operational": {
+    "required_score": 100,
+    "formula": "passed_applicable_checks / total_applicable_checks * 100",
+    "checks": ["routes", "links", "buttons", "navigation", "forms", "api_contracts", "database_flows", "authentication", "authorization", "uploads", "search", "filters", "mobile_navigation", "back_button", "loading_states", "empty_states", "error_states", "notifications", "pwa_when_applicable", "external_integrations_when_applicable"],
+    "any_failed_applicable_check_result": "fail"
+  },
+  "mandatory_gates": [
+    "specification_testable",
+    "operator_visual_approval",
+    "feature_branch_only",
+    "draft_pull_request",
+    "build_pass",
+    "typecheck_pass",
+    "lint_pass",
+    "unit_tests_pass",
+    "integration_tests_pass",
+    "browserworker_health_pass",
+    "browserworker_desktop_pass",
+    "browserworker_tablet_pass",
+    "browserworker_mobile_pass",
+    "visual_parity_pass",
+    "operational_parity_pass",
+    "accessibility_pass",
+    "security_scan_pass",
+    "secrets_scan_pass",
+    "supabase_rls_pass_when_applicable",
+    "performance_budget_pass",
+    "zero_console_errors",
+    "zero_unexpected_network_errors",
+    "receipt_bundle_complete",
+    "rollback_reference_exists",
+    "preview_smoke_pass"
+  ],
+  "production_additional_gates": ["operator_release_approval", "production_environment_checklist", "production_smoke_plan", "automatic_rollback_trigger_defined"],
+  "blocked_shortcuts": ["score_average_hides_failed_gate", "browserworker_optional", "homepage_only_visual_test", "single_breakpoint_pass", "auto_merge", "auto_production_deploy", "self_approval", "missing_receipt_treated_as_pass"]
+}
